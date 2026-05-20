@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCloud - Medical Report & Diagnostics Storage Platforms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151b2c;
+            --bg-card-hover: #1d263b;
+            --text-primary: #ffffff;
+            --text-secondary: #8f9cae;
+            --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            --accent-solid: #0ea5e9;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Billing Toggle */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 100px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.6rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .discount-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Grid Configuration */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* Card Configurations */
+        .card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(14, 165, 233, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.popular {
+            border: 2px solid var(--accent-solid);
+            background: linear-gradient(180deg, var(--bg-card) 0%, rgba(21, 27, 44, 0.8) 100%);
+        }
+
+        .card.popular::before {
+            content: "RECOMMENDED";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            letter-spacing: 0.05em;
+        }
+
+        .plan-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            min-height: 40px;
+        }
+
+        .plan-price {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .billing-cycle-label {
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 600;
+            margin-top: -1.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        /* Feature List */
+        .features-list {
+            list-style: none;
+            margin-bottom: 2.5rem;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
+
+        .features-list li svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent-solid);
+            flex-shrink: 0;
+        }
+
+        /* Action Buttons */
+        .cta-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .card.popular .cta-btn {
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            border: none;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+        }
+
+        .card.popular .cta-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toggle-container">
+        <button class="toggle-btn active" id="monthly-btn" onclick="setBilling('monthly')">Monthly Billing</button>
+        <button class="toggle-btn" id="annual-btn" onclick="setBilling('annual')">
+            Annual Plan <span class="discount-badge">Save 20%</span>
+        </button>
+    </div>
+
+    <div class="pricing-grid">
+        <!-- Clinic Starter Plan -->
+        <div class="card">
+            <div class="plan-name">Clinic Basic</div>
+            <div class="plan-desc">Perfect for private practices and small physical therapy clinics.</div>
+            <div class="plan-price">$<span id="price-starter">45</span><span id="cycle-starter">/mo</span></div>
+            <div class="billing-cycle-label" id="label-starter">Billed annually ($432/yr)</div>
+            <ul class="features-list">
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Up to 10,000 Patient Records</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>100GB Encrypted Storage</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Standard PDF Report Parsing</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>AES-256 Data Encryption</li>
+            </ul>
+            <button class="cta-btn">Deploy System</button>
+        </div>
+
+        <!-- Diagnostics Pro Plan -->
+        <div class="card popular">
+            <div class="plan-name">Diagnostics Pro</div>
+            <div class="plan-desc">Optimized for busy imaging centers and mid-sized laboratories.</div>
+            <div class="plan-price">$<span id="price-pro">125</span><span id="cycle-pro">/mo</span></div>
+            <div class="billing-cycle-label" id="label-pro">Billed annually ($1,200/yr)</div>
+            <ul class="features-list">
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Unlimited Patient Records</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>2TB DICOM & PACS Imagery Pool</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>HL7 / EHR Live Data Sync</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Automated Patient Portal SMS</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>BAA Agreement Included</li>
+            </ul>
+            <button class="cta-btn">Initialize Pro</button>
+        </div>
+
+        <!-- Medical Network / Enterprise Plan -->
+        <div class="card">
+            <div class="plan-name">Hospital Network</div>
+            <div class="plan-desc">For multi-branch medical ecosystems and regional hospital networks.</div>
+            <div class="plan-price">$<span id="price-enterprise">450</span><span id="cycle-enterprise">/mo</span></div>
+            <div class="billing-cycle-label" id="label-enterprise">Billed annually ($4,320/yr)</div>
+            <ul class="features-list">
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Multi-tenant Infrastructure</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Custom Unlimited Cloud Storage</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Advanced Audit Logs & Tracking</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Dedicated On-Call Security Engineer</li>
+            </ul>
+            <button class="cta-btn">Contact Integration Team</button>
+        </div>
+    </div>
+
+    <script>
+        // Base medical tier pricing matrix
+        const pricingData = {
+            monthly: { starter: 45, pro: 125, enterprise: 450 },
+            annual: { starter: 36, pro: 100, enterprise: 360 } // 20% discount applied
+        };
+
+        function setBilling(type) {
+            // Toggle active UI states on the selector buttons
+            document.getElementById('monthly-btn').classList.toggle('active', type === 'monthly');
+            document.getElementById('annual-btn').classList.toggle('active', type === 'annual');
+
+            // Swap tier values dynamically
+            document.getElementById('price-starter').innerText = pricingData[type].starter;
+            document.getElementById('price-pro').innerText = pricingData[type].pro;
+            document.getElementById('price-enterprise').innerText = pricingData[type].enterprise;
+
+            // Handle annual text details and formatting units
+            const suffix = type === 'annual' ? '/mo' : '/mo';
+            document.getElementById('cycle-starter').innerText = suffix;
+            document.getElementById('cycle-pro').innerText = suffix;
+            document.getElementById('cycle-enterprise').innerText = suffix;
+
+            const displayLabel = type === 'annual' ? 'block' : 'none';
+            document.getElementById('label-starter').style.display = displayLabel;
+            document.getElementById('label-pro').style.display = displayLabel;
+            document.getElementById('label-enterprise').style.display = displayLabel;
+        }
+    </script>
+</body>
+</html>
+
+```
