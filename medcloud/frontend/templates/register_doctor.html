@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Doctor Registration - CLINIK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-6 text-slate-200">
+<div class="max-w-3xl w-full bg-slate-950/90 border border-slate-800 rounded-2xl p-8">
+    <h1 class="text-2xl font-bold mb-4">Doctor Registration</h1>
+    <form id="doctorForm" class="space-y-4">
+        <input name="full_name" placeholder="Full name" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <input name="hospital_name" placeholder="Hospital name" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <input name="specialization" placeholder="Specialization" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <input name="medical_license_number" placeholder="Medical license number" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <div class="grid grid-cols-2 gap-3">
+            <input name="years_of_experience" type="number" placeholder="Years of experience" required class="p-3 rounded bg-slate-900/70 border border-slate-700" />
+            <input name="phone_number" placeholder="Phone" required class="p-3 rounded bg-slate-900/70 border border-slate-700" />
+        </div>
+        <input name="email" type="email" placeholder="Official hospital email" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <button type="submit" class="w-full py-3 rounded bg-gradient-to-r from-purple-500 to-pink-500">Submit for approval</button>
+    </form>
+    <div id="message" class="mt-4 text-sm text-emerald-300"></div>
+</div>
+<script>
+const API = '/api/auth';
+const form = document.getElementById('doctorForm');
+const message = document.getElementById('message');
+form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    try{
+        const res = await fetch(API + '/register/doctor/', {
+            method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if(res.ok){
+            const successMessage = json.detail || 'OTP sent. Redirecting to verification.';
+            message.innerText = successMessage;
+            const email = data.email ? encodeURIComponent(data.email) : '';
+            setTimeout(()=> window.location.href = '/register/doctor/verify/' + (email ? '?email=' + email : ''), 800);
+        } else {
+            message.innerText = json.detail || JSON.stringify(json);
+        }
+    }catch(err){
+        message.innerText = 'Unable to contact server.';
+    }
+});
+function getCookie(name) {let cookieValue = null; if (document.cookie && document.cookie !== '') {const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {const cookie = cookies[i].trim(); if (cookie.substring(0, name.length + 1) === (name + '=')) {cookieValue = decodeURIComponent(cookie.substring(name.length + 1)); break;}}} return cookieValue;}
+</script>
+</body>
+</html>

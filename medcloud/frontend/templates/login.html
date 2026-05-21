@@ -15,6 +15,37 @@
         .bg-glow {
             background: radial-gradient(circle at 50% -20%, #1e40af, #0f172a 60%);
         }
+        .role-pill,
+        .google-role-pill {
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background: rgba(15, 23, 42, 0.9);
+            color: #cbd5e1;
+            border-radius: 999px;
+            padding: 0.85rem 1.15rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        .role-pill:hover,
+        .google-role-pill:hover {
+            border-color: rgba(59, 130, 246, 0.55);
+            color: #f8fafc;
+            background: rgba(30, 41, 59, 0.98);
+        }
+        .role-pill.active,
+        .google-role-pill.active {
+            background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%);
+            border-color: transparent;
+            color: #0f172a;
+            box-shadow: 0 16px 32px -20px rgba(34, 211, 238, 0.8);
+        }
+        .role-pill:focus-visible,
+        .google-role-pill:focus-visible,
+        button:focus-visible {
+            outline: 2px solid rgba(59, 130, 246, 0.9);
+            outline-offset: 4px;
+        }
     </style>
 </head>
 <body class="bg-[#0f172a] bg-glow flex items-center justify-center min-h-screen text-slate-200 p-4">
@@ -22,104 +53,100 @@
     <div class="absolute top-20 left-20 w-64 h-64 bg-blue-600/10 rounded-full blur-[100px]"></div>
     <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]"></div>
 
-    <div class="w-full max-w-5xl grid md:grid-cols-2 gap-12 items-center relative z-10">
-        
-        <div class="hidden md:block space-y-8">
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Secure Cloud Storage
-            </div>
-            <h1 class="text-6xl font-extrabold text-white leading-tight">
-                Your Health, <br>
-                <span class="text-blue-500 underline decoration-blue-500/30">Digitally Secured.</span>
-            </h1>
-            <p class="text-slate-400 text-lg max-w-md">
-                Access your medical records, lab reports, and prescriptions anywhere in the world with military-grade encryption.
-            </p>
-            
-            <div class="grid grid-cols-2 gap-6">
-                <div class="flex items-start gap-3">
-                    <div class="p-2 bg-slate-800 rounded-lg"><i data-lucide="lock" class="text-blue-400"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white">Encrypted</h4>
-                        <p class="text-xs text-slate-500">AES-256 Storage</p>
-                    </div>
+    <div class="w-full max-w-6xl grid gap-10 lg:grid-cols-2 items-center relative z-10">
+        <div class="order-2 lg:order-1 rounded-[32px] bg-slate-950/60 border border-slate-800 p-10 shadow-[0_40px_120px_-60px_rgba(14,165,233,0.75)] backdrop-blur-xl lg:p-12">
+            <div class="max-w-xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-slate-700 text-sm font-semibold text-blue-300">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    Secure Healthcare Access
                 </div>
-                <div class="flex items-start gap-3">
-                    <div class="p-2 bg-slate-800 rounded-lg"><i data-lucide="smartphone" class="text-blue-400"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white">Mobile Ready</h4>
-                        <p class="text-xs text-slate-500">DigiLocker Style</p>
+                <h1 class="mt-8 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">Your Medical Records. Anywhere. Anytime.</h1>
+                <p class="mt-5 text-slate-400 text-base sm:text-lg leading-7">Sign in securely to view prescriptions, appointments, and reports with enterprise-grade protection.</p>
+
+                <div class="mt-10 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-5">
+                        <p class="text-sm uppercase tracking-[0.24em] text-slate-500 mb-3">Patients</p>
+                        <p class="text-white font-semibold leading-snug">Fast access to your health records and care history.</p>
+                    </div>
+                    <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-5">
+                        <p class="text-sm uppercase tracking-[0.24em] text-slate-500 mb-3">Doctors</p>
+                        <p class="text-white font-semibold leading-snug">Secure access to patient files, reports, and schedules.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="glass p-10 rounded-3xl shadow-2xl w-full">
+        <div class="order-1 lg:order-2 glass p-8 xl:p-10 rounded-[32px] shadow-2xl shadow-slate-950/40 border border-slate-800 bg-slate-950/95">
             <div class="mb-8">
-                <h2 class="text-2xl font-bold text-white">Welcome back</h2>
-                <p class="text-slate-400">Please enter your details to login.</p>
+                <h2 class="text-3xl font-bold text-white">Sign in to CLINIK</h2>
+                <p class="mt-2 text-slate-400">Choose your role and authenticate securely.</p>
             </div>
-            
-            <form id="loginForm" class="space-y-5">
-                <div id="errorMessage" class="hidden flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 text-sm">
-                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    <span id="errorText">Invalid email or password.</span>
+
+            <form id="loginForm" class="space-y-6" autocomplete="off">
+                <div id="errorMessage" role="alert" aria-live="assertive" class="hidden rounded-3xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+                    <p id="errorText" class="font-semibold"></p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2 text-slate-300">Email Address</label>
-                    <div class="relative">
-                        <i data-lucide="mail" class="absolute left-3 top-3 text-slate-500 w-5 h-5"></i>
-                        <input type="email" id="email" 
-                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                            placeholder="name@college.edu" required>
+                    <p class="text-sm font-semibold text-slate-300 mb-3">Login as</p>
+                    <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Choose your role">
+                        <button type="button" class="role-pill active" data-role="PATIENT">Patient</button>
+                        <button type="button" class="role-pill" data-role="DOCTOR">Doctor</button>
                     </div>
-                    <p id="emailHint" class="hidden text-xs text-red-500 mt-1">Please enter a valid email address.</p>
+                    <input type="hidden" id="loginRole" name="role" value="PATIENT">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2 text-slate-300">Password</label>
-                    <div class="relative">
-                        <i data-lucide="key-round" class="absolute left-3 top-3 text-slate-500 w-5 h-5"></i>
-                        <input type="password" id="password" 
-                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                            placeholder="••••••••" required>
+                    <label for="email" class="block text-sm font-medium text-slate-300">Email or Username</label>
+                    <div class="mt-2 relative">
+                        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500"><i data-lucide="user" class="w-5 h-5"></i></span>
+                        <input id="email" name="email_or_username" type="text" autocomplete="username" required
+                            class="w-full rounded-3xl border border-slate-700 bg-slate-900/80 py-3 pl-12 pr-4 text-slate-100 placeholder-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition" 
+                            placeholder="email@example.com or username">
                     </div>
-                </div>
-                
-                <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="rounded border-slate-700 bg-slate-900 text-blue-500">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="text-blue-400 hover:underline">Forgot password?</a>
+                    <p id="emailHint" class="mt-2 hidden text-sm text-red-400">Please enter your email or username.</p>
                 </div>
 
-                <button type="submit" 
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-600/20 transition-all transform active:scale-95 flex justify-center items-center gap-2">
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-300">Password</label>
+                    <div class="mt-2 relative">
+                        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500"><i data-lucide="lock" class="w-5 h-5"></i></span>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                            class="w-full rounded-3xl border border-slate-700 bg-slate-900/80 py-3 pl-12 pr-4 text-slate-100 placeholder-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition" 
+                            placeholder="Enter your password">
+                    </div>
+                    <ul id="passwordRules" class="mt-3 space-y-2 text-sm text-red-400 hidden" aria-live="polite">
+                        <li data-rule="length">• Minimum 8 characters</li>
+                        <li data-rule="uppercase">• At least one uppercase letter</li>
+                        <li data-rule="lowercase">• At least one lowercase letter</li>
+                        <li data-rule="number">• At least one number</li>
+                        <li data-rule="special">• At least one special character</li>
+                    </ul>
+                </div>
+
+                <button id="submitButton" type="submit"
+                    class="flex w-full items-center justify-center gap-3 rounded-3xl bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:cursor-not-allowed disabled:opacity-60">
                     <span id="btnText">Sign In</span>
-                    <div id="loader" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <svg id="btnSpinner" class="hidden h-5 w-5 animate-spin text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
                 </button>
             </form>
 
             <div class="relative my-8">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700"></div></div>
-                <div class="relative flex justify-center text-xs uppercase tracking-widest"><span class="px-3 bg-[#1e293b] text-slate-500">Fast Access</span></div>
+                <div class="absolute inset-x-0 top-1/2 border-t border-slate-800"></div>
+                <div class="relative mx-auto w-fit bg-slate-950 px-4 text-xs uppercase tracking-[0.24em] text-slate-500">Or continue with</div>
             </div>
 
-            <button class="w-full bg-white text-slate-900 py-3 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-slate-100 transition-colors">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Continue with Google
-            </button>
-            
-            <p class="text-center text-sm mt-8 text-slate-500">
-                Don't have an account? <a href="#" class="text-blue-400 hover:underline">Create an account</a>
-            </p>
+            <div class="rounded-[28px] border border-slate-800 bg-slate-900/75 p-5">
+                <p class="text-sm font-semibold text-slate-300 mb-4">Continue with Google</p>
+                <div class="grid grid-cols-2 gap-3 mb-4" role="radiogroup" aria-label="Choose Google role">
+                    <button type="button" class="google-role-pill active" data-role="PATIENT">Patient</button>
+                    <button type="button" class="google-role-pill" data-role="DOCTOR">Doctor</button>
+                </div>
+                <div id="googleError" class="hidden rounded-3xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200" role="alert"></div>
+                <div id="googleSignInButton" class="mt-4"></div>
+            </div>
+
+            <p class="mt-6 text-center text-sm text-slate-400">Need an account? <a href="/register/" class="font-semibold text-blue-300 hover:text-white">Register now</a></p>
         </div>
     </div>
 
@@ -128,44 +155,211 @@
 
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginRoleInput = document.getElementById('loginRole');
         const errorMsg = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
         const emailHint = document.getElementById('emailHint');
+        const passwordRules = document.getElementById('passwordRules');
+        const submitButton = document.getElementById('submitButton');
         const btnText = document.getElementById('btnText');
-        const loader = document.getElementById('loader');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const googleError = document.getElementById('googleError');
+        const googleSignInContainer = document.getElementById('googleSignInButton');
+        const roleButtons = document.querySelectorAll('.role-pill');
+        const googleRoleButtons = document.querySelectorAll('.google-role-pill');
 
-        loginForm.addEventListener('submit', (e) => {
+        const API_BASE = '/api';
+
+        const passwordValidators = {
+            length: (value) => value.length >= 8,
+            uppercase: (value) => /[A-Z]/.test(value),
+            lowercase: (value) => /[a-z]/.test(value),
+            number: (value) => /[0-9]/.test(value),
+            special: (value) => /[!@#$%^&*(),.?"':;{}|<>]/.test(value),
+        };
+
+        function updatePasswordValidation() {
+            const value = passwordInput.value;
+            let passCount = 0;
+            Object.entries(passwordValidators).forEach(([rule, test]) => {
+                const node = passwordRules.querySelector(`[data-rule="${rule}"]`);
+                if (!node) return;
+                if (test(value)) {
+                    node.classList.remove('text-red-400');
+                    node.classList.add('text-emerald-400');
+                    passCount += 1;
+                } else {
+                    node.classList.remove('text-emerald-400');
+                    node.classList.add('text-red-400');
+                }
+            });
+            passwordRules.classList.toggle('hidden', value.length === 0);
+            return passCount === Object.keys(passwordValidators).length;
+        }
+
+        function setActiveRole(buttons, selected) {
+            buttons.forEach((button) => {
+                button.classList.toggle('active', button.dataset.role === selected);
+            });
+        }
+
+        roleButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                setActiveRole(roleButtons, button.dataset.role);
+                loginRoleInput.value = button.dataset.role;
+            });
+        });
+
+        googleRoleButtons.forEach((button) => {
+            button.addEventListener('click', () => setActiveRole(googleRoleButtons, button.dataset.role));
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Reset UI states
+            if (submitButton.disabled) return;
+
             errorMsg.classList.add('hidden');
             emailHint.classList.add('hidden');
             emailInput.classList.remove('border-red-500');
 
-            // Regex for email validation
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-            
-            if (!emailInput.value.match(emailPattern)) {
+            if (!emailInput.value.trim()) {
                 emailInput.classList.add('border-red-500');
                 emailHint.classList.remove('hidden');
                 return;
             }
 
-            // Simulate Loading State
-            btnText.innerText = "Verifying...";
-            loader.classList.remove('hidden');
+            if (!passwordInput.value.trim()) {
+                errorText.innerText = 'Password is required.';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
 
-            setTimeout(() => {
-                // TEST CASE: If user enters "error@test.com", show error message
-                if (emailInput.value === "error@test.com") {
-                    errorMsg.classList.remove('hidden');
-                    btnText.innerText = "Sign In";
-                    loader.classList.add('hidden');
+            setLoading(true);
+            try {
+                const response = await fetch(`${API_BASE}/auth/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        email_or_username: emailInput.value.trim(),
+                        password: passwordInput.value,
+                        role: loginRoleInput.value,
+                    }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    finalizeLogin(data.user, data.access, data.refresh);
                 } else {
-                    // Success: Redirect to dashboard (Django URL)
-                    window.location.href = "{% url 'dashboard' %}";
+                    errorText.innerText = data.detail || 'Invalid credentials or role.';
+                    errorMsg.classList.remove('hidden');
+                    setLoading(false);
                 }
-            }, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                errorText.innerText = 'Connectivity issue. Please try again.';
+                errorMsg.classList.remove('hidden');
+                setLoading(false);
+            }
         });
+
+        function finalizeLogin(user, accessToken, refreshToken) {
+            localStorage.setItem('access_token', accessToken);
+            localStorage.setItem('refresh_token', refreshToken);
+            localStorage.setItem('user_role', user.role);
+            localStorage.setItem('user_id', user.id);
+            localStorage.setItem('user_email', user.email);
+            if (user.role === 'PATIENT') {
+                window.location.href = '/dashboard/patient/';
+            } else if (user.role === 'DOCTOR') {
+                window.location.href = '/dashboard/doctor/';
+            } else {
+                window.location.href = '/admin/';
+            }
+        }
+
+        async function handleGoogleCredential(response) {
+            googleError.classList.add('hidden');
+            const selected = Array.from(googleRoleButtons).find((button) => button.classList.contains('active'));
+            const role = selected ? selected.dataset.role : null;
+            if (!role) {
+                googleError.innerText = 'Please select a Google role before continuing.';
+                googleError.classList.remove('hidden');
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const googleResponse = await fetch(`${API_BASE}/auth/google/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        id_token: response.credential,
+                        role,
+                    }),
+                });
+                const data = await googleResponse.json();
+                if (googleResponse.ok && data.access && data.refresh) {
+                    finalizeLogin({ role, id: data.user?.id || '', email: data.user?.email || '' }, data.access, data.refresh);
+                    return;
+                }
+                googleError.innerText = data.detail || 'Google sign-in failed. Please try again.';
+                googleError.classList.remove('hidden');
+            } catch (error) {
+                console.error('Google login error:', error);
+                googleError.innerText = 'Unable to connect to the server.';
+                googleError.classList.remove('hidden');
+            }
+            setLoading(false);
+        }
+
+        function setLoading(active) {
+            submitButton.disabled = active;
+            btnSpinner.classList.toggle('hidden', !active);
+            btnText.innerText = active ? 'Signing in...' : 'Sign In';
+            submitButton.classList.toggle('opacity-70', active);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        window.onload = function() {
+            const googleClientId = '{{ google_client_id }}';
+            if (!googleClientId) {
+                console.warn('Google OAuth client is not configured. Set GOOGLE_CLIENT_ID in the environment.');
+                googleSignInContainer.innerHTML = '<div class="text-sm text-slate-500">Google sign-in unavailable.</div>';
+                return;
+            }
+
+            google.accounts.id.initialize({
+                client_id: googleClientId,
+                callback: handleGoogleCredential,
+            });
+
+            google.accounts.id.renderButton(
+                googleSignInContainer,
+                { theme: 'outline', size: 'large', width: '100%' }
+            );
+        };
     </script>
 </body>
 </html>

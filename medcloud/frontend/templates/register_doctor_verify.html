@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Verify OTP - CLINIK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-6 text-slate-200">
+<div class="max-w-xl w-full bg-slate-950/90 border border-slate-800 rounded-2xl p-8">
+    <h1 class="text-2xl font-bold mb-4">Verify OTP</h1>
+    <p class="text-slate-400 mb-4">Enter the OTP sent to your email or phone for doctor verification.</p>
+    <form id="otpForm" autocomplete="off" class="space-y-4">
+        <input name="email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="Email used during registration" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <input name="code" type="text" autocomplete="one-time-code" inputmode="numeric" autocapitalize="off" autocorrect="off" spellcheck="false" readonly placeholder="OTP code" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
+        <div class="flex gap-3">
+            <button type="submit" class="flex-1 py-3 rounded bg-gradient-to-r from-purple-500 to-pink-500">Verify OTP</button>
+            <button type="button" id="resendBtn" class="px-4 py-3 rounded bg-slate-700/80">Resend OTP</button>
+        </div>
+    </form>
+    <div id="message" class="mt-4 text-sm text-amber-300"></div>
+</div>
+<script>
+const API = '/api/auth';
+const form = document.getElementById('otpForm');
+const message = document.getElementById('message');
+fillEmailFromQuery();
+// Prevent persistent autofill dropdowns: make OTP field readonly until user focuses it
+const otpInput = document.querySelector('input[name="code"]');
+if (otpInput) {
+    otpInput.addEventListener('focus', () => {
+        otpInput.removeAttribute('readonly');
+        setTimeout(() => otpInput.select(), 50);
+    });
+}
+form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    try{
+        const res = await fetch(API + '/register/doctor/verify-otp/', {
+            method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+            body: JSON.stringify({...data, purpose: 'doctor_verification'})
+        });
+        const json = await res.json();
+        if(res.ok){
+            message.innerHTML = (json.detail || 'OTP verified. Complete your password setup to log in.') + '<br/><span class="text-slate-400">Redirecting to password setup...</span>';
+            setTimeout(()=> window.location.replace('/register/password/?email=' + encodeURIComponent(data.email)), 500);
+        } else {
+            message.innerText = json.detail || JSON.stringify(json);
+        }
+    }catch(err){
+        message.innerText = 'Unable to contact server.';
+    }
+});
+const resendBtn = document.getElementById('resendBtn');
+if (resendBtn) {
+    resendBtn.addEventListener('click', async ()=>{
+        const emailField = document.querySelector('input[name="email"]');
+        const email = emailField ? emailField.value.trim() : '';
+        if (!email) { message.innerText = 'Please provide the email used during registration.'; return; }
+        resendBtn.disabled = true;
+        try {
+            const res = await fetch(API + '/resend-otp/', { method: 'POST', headers: {'Content-Type':'application/json','X-CSRFToken': getCookie('csrftoken')}, body: JSON.stringify({email: email, purpose: 'doctor_verification'}) });
+            const json = await res.json();
+            message.innerText = json.detail || 'OTP resent.';
+            if (res.ok && json.debug_otp) {
+                console.log('DEBUG OTP:', json.debug_otp);
+            }
+        } catch (err) {
+            message.innerText = 'Unable to resend OTP.';
+        }
+        setTimeout(()=> resendBtn.disabled = false, 30000);
+    });
+}
+function getCookie(name) {let cookieValue = null; if (document.cookie && document.cookie !== '') {const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {const cookie = cookies[i].trim(); if (cookie.substring(0, name.length + 1) === (name + '=')) {cookieValue = decodeURIComponent(cookie.substring(name.length + 1)); break;}}} return cookieValue;}
+function fillEmailFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+    if (email) {
+        const emailField = document.querySelector('input[name="email"]');
+        if (emailField) {
+            emailField.value = email;
+        }
+    }
+}
+</script>
+</body>
+</html>
