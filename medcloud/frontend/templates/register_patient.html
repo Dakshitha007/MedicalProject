@@ -41,10 +41,17 @@ form.addEventListener('submit', async (e)=>{
         });
         const json = await res.json();
         if(res.ok){
-            const successMessage = json.detail || 'OTP sent. Redirecting to verification.';
+            const patientId = json.patient_id;
+            let successMessage = json.detail || 'OTP sent. Redirecting to verification.';
+            if (patientId) {
+                successMessage += ' Your patient ID is ' + patientId + '.';
+            }
             message.innerText = successMessage;
             const email = data.email ? encodeURIComponent(data.email) : '';
-            setTimeout(()=> window.location.href = '/register/patient/verify/' + (email ? '?email=' + email : ''), 800);
+            const params = new URLSearchParams();
+            if (email) params.set('email', email);
+            if (patientId) params.set('patient_id', patientId);
+            setTimeout(()=> window.location.href = '/register/patient/verify/?' + params.toString(), 800);
         } else {
             message.innerText = json.detail || JSON.stringify(json);
         }

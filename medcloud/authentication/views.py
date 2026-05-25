@@ -79,16 +79,21 @@ class PatientRegistrationAPIView(APIView):
                 payload = {'detail': 'Your registration is already in progress. A new OTP has been sent.'}
                 if settings.DEBUG and otp:
                     payload['debug_otp'] = otp.code
+                patient_profile = PatientProfile.objects.filter(user=existing).first()
+                if patient_profile and patient_profile.patient_id:
+                    payload['patient_id'] = patient_profile.patient_id
                 return Response(payload, status=status.HTTP_200_OK)
             return Response({'detail': 'A patient with this email already exists. Please log in instead.'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = PatientRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        patient_profile = PatientProfile.objects.filter(user=user).first()
+        patient_id = patient_profile.patient_id if patient_profile else None
         if settings.DEBUG:
             otp = OTPVerification.objects.filter(email__iexact=user.email, purpose=OTPVerification.PURPOSE_REGISTRATION).order_by('-created_at').first()
-            return Response({'detail': 'Patient registration started. OTP has been sent to the provided contact.', 'debug_otp': otp.code if otp else None}, status=status.HTTP_201_CREATED)
-        return Response({'detail': 'Patient registration started. OTP has been sent to the provided contact.'}, status=status.HTTP_201_CREATED)
+            return Response({'detail': 'Patient registration started. OTP has been sent to the provided contact.', 'patient_id': patient_id, 'debug_otp': otp.code if otp else None}, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'Patient registration started. OTP has been sent to the provided contact.', 'patient_id': patient_id}, status=status.HTTP_201_CREATED)
 
 
 class PatientOTPVerifyAPIView(APIView):
@@ -271,6 +276,9 @@ class ResendOTPAPIView(APIView):
 
         otp = send_registration_otp(user, purpose=purpose)
         payload = {'detail': 'A new OTP has been sent.'}
+        patient_profile = PatientProfile.objects.filter(user=user).first()
+        if patient_profile and patient_profile.patient_id:
+            payload['patient_id'] = patient_profile.patient_id
         if settings.DEBUG and otp:
             payload['debug_otp'] = otp.code
         return Response(payload, status=status.HTTP_200_OK)

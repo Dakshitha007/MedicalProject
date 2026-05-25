@@ -2,34 +2,261 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-[#0f172a] text-white p-10">
-    <div class="max-w-2xl mx-auto">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-            <i data-lucide="shield-check" class="text-green-400"></i> Secure Report Upload
-        </h2>
-        
-        <div class="border-2 border-dashed border-slate-700 rounded-3xl p-12 text-center bg-[#1e293b] hover:border-blue-500 transition cursor-pointer">
-            <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto text-slate-500 mb-4"></i>
-            <p class="text-lg">Drag and drop medical PDF or Images</p>
-            <p class="text-sm text-slate-500 mt-2">Files are encrypted with AES-256 before storage</p>
-            <input type="file" class="hidden" id="fileInput">
-            <button onclick="document.getElementById('fileInput').click()" class="mt-6 bg-blue-600 px-6 py-2 rounded-full font-bold">Select File</button>
+    <div class="max-w-3xl mx-auto space-y-8">
+        <div>
+            <h2 class="text-2xl font-bold mb-3 flex items-center gap-2">
+                <i data-lucide="shield-check" class="text-green-400"></i> Secure Report Upload
+            </h2>
+            <p class="text-slate-400">Click Select File, then double-click the file in your system dialog. Once the file is chosen, the app verifies type, size, patient association, uploader permission, and report quality before upload.</p>
         </div>
 
-        <div class="mt-10 bg-[#1e293b] rounded-2xl p-6 border border-slate-700">
-            <h3 class="text-sm font-bold text-slate-400 uppercase mb-4">Recent Scanned Files</h3>
-            <div class="flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="file-text" class="text-blue-400"></i>
-                    <span>Blood_Test_May.pdf</span>
+        <div class="bg-[#1e293b] rounded-3xl border border-slate-700 p-8 space-y-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label class="block">
+                    <span class="text-sm text-slate-400">Patient ID</span>
+                    <input id="patientIdInput" type="text" placeholder="Enter patient ID" class="mt-2 w-full rounded-2xl border border-slate-600 bg-[#0f172a] px-4 py-3 text-white focus:border-blue-500 outline-none" />
+                </label>
+                <label class="block">
+                    <span class="text-sm text-slate-400">Report Type</span>
+                    <select id="reportType" class="mt-2 w-full rounded-2xl border border-slate-600 bg-[#0f172a] px-4 py-3 text-white focus:border-blue-500 outline-none">
+                        <option value="">Select report type</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Prescription">Prescription</option>
+                        <option value="Immunization">Immunization</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="bg-[#111827] rounded-3xl p-8 text-center border border-slate-700">
+                <i data-lucide="upload-cloud" class="w-14 h-14 mx-auto text-slate-500 mb-4"></i>
+                <p class="text-lg text-white">Select your report file</p>
+                <p class="text-sm text-slate-500 mt-2">Double-click the file in the system dialog to select it.</p>
+                <input type="file" class="hidden" id="fileInput" accept=".pdf,image/*">
+                <button type="button" id="selectFileButton" class="mt-6 bg-blue-600 px-8 py-3 rounded-full font-bold hover:bg-blue-500 transition">Select File</button>
+                <p id="selectedFileText" class="text-sm text-slate-300 mt-4 hidden"></p>
+                <div id="validationSummary" class="mt-4 text-left space-y-2 hidden"></div>
+                <p id="statusMessage" class="text-sm mt-3 hidden"></p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label class="block">
+                    <span class="text-sm text-slate-400">Diagnosis / Notes (optional)</span>
+                    <textarea id="diagnosisInput" rows="3" class="mt-2 w-full rounded-2xl border border-slate-600 bg-[#0f172a] px-4 py-3 text-white focus:border-blue-500 outline-none" placeholder="Brief diagnosis or notes"></textarea>
+                </label>
+                <label class="block">
+                    <span class="text-sm text-slate-400">Prescription / Instructions (optional)</span>
+                    <textarea id="prescriptionInput" rows="3" class="mt-2 w-full rounded-2xl border border-slate-600 bg-[#0f172a] px-4 py-3 text-white focus:border-blue-500 outline-none" placeholder="Optional prescription summary"></textarea>
+                </label>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Selected file:</p>
+                    <p id="recentFileName" class="text-white font-medium">No file selected</p>
                 </div>
-                <button class="text-blue-400 text-sm font-semibold">Download</button>
+                <button id="uploadButton" type="button" class="w-full sm:w-auto bg-emerald-500 px-8 py-3 rounded-full font-bold hover:bg-emerald-400 transition">Upload Report</button>
             </div>
         </div>
     </div>
-    <script>lucide.createIcons();</script>
+
+    <script src="{% static 'frontend/api-utils.js' %}"></script>
+    <script>
+        lucide.createIcons();
+
+        const fileInput = document.getElementById('fileInput');
+        const selectFileButton = document.getElementById('selectFileButton');
+        const patientIdInput = document.getElementById('patientIdInput');
+        const reportType = document.getElementById('reportType');
+        const diagnosisInput = document.getElementById('diagnosisInput');
+        const prescriptionInput = document.getElementById('prescriptionInput');
+        const selectedFileText = document.getElementById('selectedFileText');
+        const validationSummary = document.getElementById('validationSummary');
+        const statusMessage = document.getElementById('statusMessage');
+        const recentFileName = document.getElementById('recentFileName');
+        const uploadButton = document.getElementById('uploadButton');
+
+        let selectedFile = null;
+        let qualityWarning = null;
+
+        function showStatus(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('text-green-400', 'text-red-400', 'text-slate-300');
+            if (type === 'success') statusMessage.classList.add('text-green-400');
+            else if (type === 'error') statusMessage.classList.add('text-red-400');
+            else statusMessage.classList.add('text-slate-300');
+            statusMessage.classList.remove('hidden');
+        }
+
+        function clearStatus() {
+            statusMessage.textContent = '';
+            statusMessage.classList.add('hidden');
+        }
+
+        function updateSelectedFile(file) {
+            selectedFile = file;
+            selectedFileText.textContent = `Selected file: ${file.name}`;
+            selectedFileText.classList.remove('hidden');
+            recentFileName.textContent = file.name;
+            validateFile(file);
+        }
+
+        function validateFile(file) {
+            const rules = [];
+            let valid = true;
+            const maxSize = 10 * 1024 * 1024;
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+            if (file.size > maxSize) {
+                rules.push({ text: 'File size must be 10MB or less.', ok: false });
+                valid = false;
+            } else {
+                rules.push({ text: 'File size is within limit.', ok: true });
+            }
+            if (!allowedTypes.includes(file.type)) {
+                rules.push({ text: 'Only PDF, JPG, and PNG are allowed.', ok: false });
+                valid = false;
+            } else {
+                rules.push({ text: 'File type is allowed.', ok: true });
+            }
+            qualityWarning = checkContentQuality(file.name);
+            if (qualityWarning) {
+                rules.push({ text: qualityWarning, ok: false });
+            } else {
+                rules.push({ text: 'Filename appears to include report details.', ok: true });
+            }
+            renderValidationSummary(rules);
+            if (valid && !qualityWarning) {
+                showStatus('File is selected and ready for upload.', 'success');
+            } else if (!valid) {
+                showStatus('Fix the warnings before uploading.', 'error');
+            } else {
+                showStatus('File is valid but review the content warning before uploading.', 'info');
+            }
+            return valid;
+        }
+
+        function checkContentQuality(filename) {
+            const normalized = filename.toLowerCase();
+            const hints = ['patient', 'report', 'lab', 'scan', 'medical', 'results', 'xray', 'ct', 'mri', 'prescription'];
+            const containsHint = hints.some(hint => normalized.includes(hint));
+            if (!containsHint) {
+                return 'Filename does not contain clear report metadata; verify patient ID and report date are included.';
+            }
+            return null;
+        }
+
+        function renderValidationSummary(rules) {
+            validationSummary.innerHTML = '';
+            validationSummary.classList.remove('hidden');
+            rules.forEach(rule => {
+                const item = document.createElement('p');
+                item.textContent = rule.text;
+                item.className = rule.ok ? 'text-slate-300' : 'text-red-400';
+                validationSummary.appendChild(item);
+            });
+        }
+
+        function validateUpload() {
+            clearStatus();
+            if (!isAuthenticated()) {
+                showStatus('Please log in before uploading a report.', 'error');
+                return false;
+            }
+
+            const user = getUser();
+            if (user.role !== 'DOCTOR') {
+                showStatus('Only verified doctors may upload reports.', 'error');
+                return false;
+            }
+
+            if (!selectedFile) {
+                showStatus('No file selected. Please select a report file first.', 'error');
+                return false;
+            }
+
+            const patientId = patientIdInput.value.trim();
+            if (!patientId) {
+                showStatus('Patient ID is required to associate the report with a patient profile.', 'error');
+                return false;
+            }
+
+            if (!reportType.value) {
+                showStatus('Please select a report type to help validate the upload.', 'error');
+                return false;
+            }
+
+            if (!validateFile(selectedFile)) {
+                return false;
+            }
+
+            if (qualityWarning) {
+                const confirmed = confirm('The file name may not include enough report metadata. Upload anyway?');
+                if (!confirmed) {
+                    showStatus('Upload canceled. Please select a better file or update the filename.', 'error');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        async function uploadReport() {
+            if (!validateUpload()) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('patient_id', patientIdInput.value.trim());
+            if (diagnosisInput.value.trim()) formData.append('diagnosis', diagnosisInput.value.trim());
+            if (prescriptionInput.value.trim()) formData.append('prescription', prescriptionInput.value.trim());
+
+            uploadButton.disabled = true;
+            uploadButton.textContent = 'Uploading...';
+            showStatus('Uploading report... please wait.', 'info');
+
+            try {
+                const token = localStorage.getItem('access_token');
+                const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+                const response = await fetch('/api/reports/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : '',
+                        'X-CSRFToken': csrfToken || ''
+                    },
+                    body: formData
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    showStatus(data.detail || JSON.stringify(data), 'error');
+                    uploadButton.disabled = false;
+                    uploadButton.textContent = 'Upload Report';
+                    return;
+                }
+                showStatus('Report uploaded successfully.', 'success');
+                uploadButton.textContent = 'Upload Report';
+                uploadButton.disabled = false;
+            } catch (error) {
+                showStatus('Upload failed. Check your connection and try again.', 'error');
+                uploadButton.disabled = false;
+                uploadButton.textContent = 'Upload Report';
+            }
+        }
+
+        selectFileButton.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                updateSelectedFile(file);
+            }
+        });
+
+        uploadButton.addEventListener('click', uploadReport);
+    </script>
 </body>
 </html>

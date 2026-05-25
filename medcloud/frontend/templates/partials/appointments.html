@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -64,116 +64,31 @@
             </div>
             
             <!-- Appointment List Container -->
-            <div class="space-y-4" id="appointmentList">
-
-                <!-- Card 1: Scheduled -->
-                <div data-status="scheduled" class="appointment-card premium-card-glow flex flex-col lg:flex-row lg:items-center justify-between p-5 bg-slate-800/30 rounded-2xl border border-slate-700/50 transition-all duration-300 group cursor-pointer gap-4">
-                    <div class="flex items-center gap-5">
-                        <div class="bg-gradient-to-b from-blue-600 to-blue-700 text-white rounded-xl px-4 py-3 text-center min-w-[72px] shadow-lg shadow-blue-600/20 border border-blue-500/30 transform group-hover:scale-[1.03] transition-transform duration-300">
-                            <span class="text-[10px] uppercase font-black tracking-widest text-blue-200 block leading-none">May</span>
-                            <span class="text-2xl font-black block mt-1.5 leading-none tracking-tight">20</span>
-                        </div>
-                        <div>
-                            <h4 class="title-transition font-bold text-white text-base tracking-wide group-hover:text-blue-400">
-                                Dr. Oksana Mahatova
-                            </h4>
-                            <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mt-0.5">Dental Department</p>
-                            <div class="flex items-center gap-2 mt-1.5">
-                                <span class="status-pulse-blue w-1.5 h-1.5 bg-blue-500 rounded-full inline-block shadow-[0_0_6px_rgba(59,130,246,0.6)]"></span>
-                                <p class="text-sm text-slate-400 font-medium">Treatment and cleaning of canals</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto border-t lg:border-t-0 border-slate-700/50 pt-3 lg:pt-0">
-                        <div class="text-left lg:text-right flex lg:flex-col items-center lg:items-end gap-2.5">
-                            <span class="text-sm font-bold text-slate-200 bg-[#0f172a]/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 tracking-wide shadow-inner">
-                                11:00 - 12:30
-                            </span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-extrabold uppercase tracking-wider border border-blue-500/20 shadow-sm">
-                                <i data-lucide="clock" class="w-3 h-3"></i> Scheduled
-                            </span>
-                        </div>
-                        <button class="p-2 text-slate-500 hover:text-white hover:bg-slate-700 rounded-xl transition">
-                            <i data-lucide="more-vertical" class="w-5 h-5"></i>
-                        </button>
-                    </div>
+            <div class="space-y-4">
+                <div id="appointmentsMessage" class="text-sm text-slate-300"></div>
+                <div class="overflow-x-auto bg-slate-950/50 rounded-3xl border border-slate-700/60 shadow-inner">
+                    <table class="min-w-full divide-y divide-slate-700">
+                        <thead class="bg-slate-900/80">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Patient</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Doctor</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Scheduled</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Reason</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Status</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody" class="bg-slate-950/60">
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">Loading appointments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <!-- Card 2: In Progress -->
-                <div data-status="in-progress" class="appointment-card premium-card-glow flex flex-col lg:flex-row lg:items-center justify-between p-5 bg-slate-800/30 rounded-2xl border border-slate-700/50 transition-all duration-300 group cursor-pointer gap-4">
-                    <div class="flex items-center gap-5">
-                        <div class="bg-gradient-to-b from-amber-500 to-amber-600 text-white rounded-xl px-4 py-3 text-center min-w-[72px] shadow-lg shadow-amber-600/10 border border-amber-400/30 transform group-hover:scale-[1.03] transition-transform duration-300">
-                            <span class="text-[10px] uppercase font-black tracking-widest text-amber-200 block leading-none">May</span>
-                            <span class="text-2xl font-black block mt-1.5 leading-none tracking-tight">20</span>
-                        </div>
-                        <div>
-                            <h4 class="title-transition font-bold text-white text-base tracking-wide group-hover:text-amber-400">
-                                Dr. Alexander Wright
-                            </h4>
-                            <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider mt-0.5">Cardiology Clinic</p>
-                            <div class="flex items-center gap-2 mt-1.5">
-                                <span class="status-pulse-amber w-1.5 h-1.5 bg-amber-500 rounded-full inline-block shadow-[0_0_6px_rgba(245,158,11,0.6)]"></span>
-                                <p class="text-sm text-slate-400 font-medium">Cardiovascular Routine Follow-up Check</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto border-t lg:border-t-0 border-slate-700/50 pt-3 lg:pt-0">
-                        <div class="text-left lg:text-right flex lg:flex-col items-center lg:items-end gap-2.5">
-                            <span class="text-sm font-bold text-slate-200 bg-[#0f172a]/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 tracking-wide shadow-inner">
-                                14:15 - 15:00
-                            </span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-extrabold uppercase tracking-wider border border-amber-500/20 shadow-sm">
-                                <i data-lucide="activity" class="w-3 h-3 animate-pulse"></i> In Progress
-                            </span>
-                        </div>
-                        <button class="p-2 text-slate-500 hover:text-white hover:bg-slate-700 rounded-xl transition">
-                            <i data-lucide="more-vertical" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Card 3: Past Visits / Completed -->
-                <div data-status="past-visits" class="appointment-card premium-card-glow flex flex-col lg:flex-row lg:items-center justify-between p-5 bg-slate-800/30 rounded-2xl border border-slate-700/50 transition-all duration-300 group cursor-pointer gap-4">
-                    <div class="flex items-center gap-5">
-                        <div class="bg-gradient-to-b from-emerald-600 to-emerald-700 text-white rounded-xl px-4 py-3 text-center min-w-[72px] shadow-lg shadow-emerald-600/10 border border-emerald-500/30 transform group-hover:scale-[1.03] transition-transform duration-300">
-                            <span class="text-[10px] uppercase font-black tracking-widest text-emerald-200 block leading-none">May</span>
-                            <span class="text-2xl font-black block mt-1.5 leading-none tracking-tight">18</span>
-                        </div>
-                        <div>
-                            <h4 class="title-transition font-bold text-white text-base tracking-wide group-hover:text-emerald-400">
-                                Dr. Sarah Jenkins
-                            </h4>
-                            <p class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mt-0.5">Therapeutics & Rehab</p>
-                            <div class="flex items-center gap-2 mt-1.5">
-                                <span class="status-pulse-emerald w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block shadow-[0_0_6px_rgba(16,185,129,0.6)]"></span>
-                                <p class="text-sm text-slate-400 font-medium line-through decoration-slate-500/60">Dermatology Consult & Allergy Screening</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto border-t lg:border-t-0 border-slate-700/50 pt-3 lg:pt-0">
-                        <div class="text-left lg:text-right flex lg:flex-col items-center lg:items-end gap-2.5">
-                            <span class="text-sm font-bold text-slate-500 bg-[#0f172a]/40 px-3.5 py-1.5 rounded-xl border border-slate-800/80 tracking-wide line-through">
-                                09:30 - 10:45
-                            </span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-500/20 shadow-sm">
-                                <i data-lucide="check" class="w-3 h-3"></i> Completed
-                            </span>
-                        </div>
-                        <button class="p-2 text-slate-500 hover:text-white hover:bg-slate-700 rounded-xl transition">
-                            <i data-lucide="more-vertical" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Empty State Block -->
                 <div id="emptyState" class="hidden text-center py-12 bg-slate-800/10 rounded-2xl border border-dashed border-slate-700/40">
                     <i data-lucide="calendar-x" class="w-10 h-10 text-slate-500 mx-auto mb-3"></i>
-                    <p class="text-sm text-slate-400 font-medium">No appointments found matching this category.</p>
+                    <p class="text-sm text-slate-400 font-medium">No appointments found. Use the button above to add a new appointment.</p>
                 </div>
-
             </div>
         </section>
     </main>
@@ -184,43 +99,53 @@
             <div class="flex items-center justify-between p-5 border-b border-slate-700/60 bg-slate-800/40">
                 <div class="flex items-center gap-2.5">
                     <i data-lucide="calendar-plus" class="w-5 h-5 text-blue-400"></i>
-                    <h3 class="text-lg font-bold text-white">Book New Appointment</h3>
+                    <h3 id="modalTitle" class="text-lg font-bold text-white">Add Appointment</h3>
                 </div>
                 <button onclick="toggleModal('bookingModal', false)" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <form onsubmit="handleFormSubmit(event)" class="p-5 space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Select Physician & Specialty</label>
-                    <select required class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                        <option value="">Choose a Specialist...</option>
-                        <option value="dental">Dr. Oksana Mahatova - Dental Department</option>
-                        <option value="cardio">Dr. Alexander Wright - Cardiology Clinic</option>
-                        <option value="rehab">Dr. Sarah Jenkins - Therapeutics & Rehab</option>
+            <form id="appointmentForm" onsubmit="handleFormSubmit(event)" class="p-5 space-y-4">
+                <input type="hidden" id="appointmentIdInput" />
+                <div id="patientField" class="hidden">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Patient ID</label>
+                    <input id="patientIdInput" type="text" placeholder="Enter patient ID" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                </div>
+                <div id="doctorField" class="hidden">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Doctor Profile ID</label>
+                    <input id="doctorIdInput" type="text" placeholder="Enter doctor profile ID" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                </div>
+                <div id="doctorSelectField" class="hidden">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Doctor</label>
+                    <select id="doctorSelect" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition">
+                        <option value="">Choose a verified doctor...</option>
                     </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Preferred Date</label>
-                        <input type="date" required class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Time Slot</label>
-                        <input type="time" required class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Date and time</label>
+                    <input id="scheduledAtInput" type="datetime-local" required class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Reason for Visit</label>
-                    <textarea required rows="3" placeholder="Describe your symptoms or consultation goals briefly..." class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Reason for appointment</label>
+                    <textarea id="reasonInput" rows="4" placeholder="Describe the reason for your visit" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
                 </div>
 
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Status</label>
+                    <select id="statusInput" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition">
+                        <option value="scheduled">Scheduled</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div id="formError" class="text-sm text-rose-400"></div>
                 <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-700/40">
                     <button type="button" onclick="toggleModal('bookingModal', false)" class="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-blue-600/10">Confirm Booking</button>
+                    <button type="submit" id="submitAppointmentButton" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-blue-600/10">Save Appointment</button>
                 </div>
             </form>
         </div>
@@ -288,45 +213,272 @@
         </div>
     </div>
 
-    <!-- JavaScript Layer -->
+        <!-- JavaScript Layer -->
     <script>
-        // Initialize Lucide Icons on start
         lucide.createIcons();
 
-        // 1. Interactive Tabs Filtering Logic
-        function filterAppointments(status, activeBtn) {
-            // Manage Active Button Styles
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.className = "tab-btn text-xs font-semibold px-4 py-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg transition";
-            });
+        const API_BASE = '/api';
+        const appointmentsTableBody = document.getElementById('appointmentsTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const appointmentsMessage = document.getElementById('appointmentsMessage');
+        const patientField = document.getElementById('patientField');
+        const doctorField = document.getElementById('doctorField');
+        const doctorSelectField = document.getElementById('doctorSelectField');
+        const doctorSelect = document.getElementById('doctorSelect');
+        const patientIdInput = document.getElementById('patientIdInput');
+        const doctorIdInput = document.getElementById('doctorIdInput');
+        const scheduledAtInput = document.getElementById('scheduledAtInput');
+        const reasonInput = document.getElementById('reasonInput');
+        const statusInput = document.getElementById('statusInput');
+        const formError = document.getElementById('formError');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitAppointmentButton = document.getElementById('submitAppointmentButton');
+        const appointmentIdInput = document.getElementById('appointmentIdInput');
 
-            // Make clicked button prominent
-            activeBtn.className = "tab-btn text-xs font-bold px-4 py-2 bg-blue-600 text-white rounded-lg transition shadow-md shadow-blue-600/10";
+        let appointments = [];
+        let currentRole = localStorage.getItem('user_role') || '';
+        let currentPatientId = null;
+        let currentDoctorId = null;
 
-            // Filter Core Lists
-            const cards = document.querySelectorAll('.appointment-card');
-            let visibleCount = 0;
+        async function initAppointments() {
+            if (!localStorage.getItem('access_token')) {
+                window.location.href = '/';
+                return;
+            }
+            await loadCurrentProfileIds();
+            await loadDoctorOptions();
+            await loadAppointments();
+        }
 
-            cards.forEach(card => {
-                if (status === 'all' || card.getAttribute('data-status') === status) {
-                    card.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
-            });
+            }
+            return cookieValue;
+        }
 
-            // Fallback for Empty Categories
-            const emptyState = document.getElementById('emptyState');
-            if (visibleCount === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
+        function getAuthHeaders() {
+            const token = localStorage.getItem('access_token');
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : '',
+                'X-CSRFToken': getCookie('csrftoken')
+            };
+        }
+
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: getAuthHeaders(),
+                credentials: 'same-origin'
+            };
+            if (body && method !== 'GET') {
+                options.body = JSON.stringify(body);
+            }
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            if (response.status === 401) {
+                localStorage.clear();
+                window.location.href = '/';
+                return null;
+            }
+            if (response.status === 204) {
+                return null;
+            }
+            return response.json();
+        }
+
+        async function loadCurrentProfileIds() {
+            if (currentRole === 'PATIENT') {
+                const data = await apiRequest('/patients/profile/');
+                const profile = Array.isArray(data) ? data[0] : data;
+                if (profile && profile.patient_id) {
+                    currentPatientId = profile.patient_id;
+                    patientIdInput.value = currentPatientId;
+                    patientField.classList.add('hidden');
+                } else {
+                    patientField.classList.remove('hidden');
+                }
+            }
+            if (currentRole === 'DOCTOR') {
+                const data = await apiRequest('/doctors/profile/');
+                const profile = Array.isArray(data) ? data[0] : data;
+                if (profile && profile.id) {
+                    currentDoctorId = profile.id;
+                    doctorIdInput.value = currentDoctorId;
+                    doctorField.classList.add('hidden');
+                } else {
+                    doctorField.classList.remove('hidden');
+                }
             }
         }
 
-        // 2. Modals Control System
+        async function loadDoctorOptions() {
+            if (currentRole !== 'PATIENT') {
+                return;
+            }
+            const doctors = await apiRequest('/doctors/profile/');
+            const list = Array.isArray(doctors) ? doctors : (doctors.results || []);
+            doctorSelect.innerHTML = '<option value="">Choose a verified doctor...</option>';
+            list.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor.id;
+                option.textContent = `${doctor.full_name}${doctor.specialization ? ' — ' + doctor.specialization : ''}`;
+                doctorSelect.appendChild(option);
+            });
+            doctorSelectField.classList.remove('hidden');
+            doctorField.classList.add('hidden');
+        }
+
+        async function loadAppointments() {
+            appointmentsMessage.textContent = 'Loading appointments...';
+            const data = await apiRequest('/appointments/');
+            const list = Array.isArray(data) ? data : (data.results || data);
+            appointments = Array.isArray(list) ? list : [];
+            renderAppointments();
+            appointmentsMessage.textContent = appointments.length ? `You have ${appointments.length} appointment(s).` : 'No appointments yet.';
+        }
+
+        function renderAppointments() {
+            appointmentsTableBody.innerHTML = '';
+            if (!appointments.length) {
+                appointmentsTableBody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">No appointments found.</td></tr>';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            appointments.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-slate-800/80 hover:bg-slate-900/50';
+                row.innerHTML = `
+                    <td class="px-4 py-4 text-sm text-slate-200">${item.patient?.patient_id || '-'}<div class="text-xs text-slate-500 mt-1">${item.patient?.full_name || 'Unknown patient'}</div></td>
+                    <td class="px-4 py-4 text-sm text-slate-200">${item.doctor?.full_name || '-'}<div class="text-xs text-slate-500 mt-1">${item.doctor?.specialization || item.doctor?.hospital_name || ''}</div></td>
+                    <td class="px-4 py-4 text-sm text-slate-200">${formatDateTime(item.scheduled_at)}</td>
+                    <td class="px-4 py-4 text-sm text-slate-200">${item.reason || 'No reason provided'}</td>
+                    <td class="px-4 py-4 text-sm font-semibold ${statusClass(item.status)}">${item.status}</td>
+                    <td class="px-4 py-4 text-center">
+                        <button type="button" onclick="openEditModal(${item.id})" class="mr-2 px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold">Edit</button>
+                        <button type="button" onclick="deleteAppointment(${item.id})" class="px-3 py-1 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">Delete</button>
+                    </td>
+                `;
+                appointmentsTableBody.appendChild(row);
+            });
+        }
+
+        function statusClass(status) {
+            if (status === 'completed') return 'text-emerald-300';
+            if (status === 'cancelled') return 'text-rose-300';
+            return 'text-sky-300';
+        }
+
+        function formatDateTime(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            return date.toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function openAddModal() {
+            appointmentIdInput.value = '';
+            patientIdInput.value = currentPatientId || '';
+            doctorIdInput.value = currentDoctorId || '';
+            doctorSelect.value = '';
+            scheduledAtInput.value = '';
+            reasonInput.value = '';
+            statusInput.value = 'scheduled';
+            formError.textContent = '';
+            modalTitle.textContent = 'Add Appointment';
+            submitAppointmentButton.textContent = 'Create Appointment';
+            if (currentRole === 'PATIENT') {
+                doctorSelectField.classList.remove('hidden');
+                doctorField.classList.add('hidden');
+            } else if (currentRole === 'DOCTOR') {
+                doctorField.classList.remove('hidden');
+                patientField.classList.remove('hidden');
+                doctorSelectField.classList.add('hidden');
+            }
+            toggleModal('bookingModal', true);
+        }
+
+        function openEditModal(id) {
+            const item = appointments.find(appt => appt.id === id);
+            if (!item) return;
+            appointmentIdInput.value = item.id;
+            patientIdInput.value = item.patient?.patient_id || currentPatientId || '';
+            doctorIdInput.value = item.doctor?.id || currentDoctorId || '';
+            doctorSelect.value = item.doctor?.id || '';
+            scheduledAtInput.value = toDatetimeLocal(item.scheduled_at);
+            reasonInput.value = item.reason || '';
+            statusInput.value = item.status || 'scheduled';
+            formError.textContent = '';
+            modalTitle.textContent = 'Edit Appointment';
+            submitAppointmentButton.textContent = 'Save Changes';
+            if (currentRole === 'PATIENT') {
+                doctorSelectField.classList.remove('hidden');
+                doctorField.classList.add('hidden');
+            } else if (currentRole === 'DOCTOR') {
+                doctorField.classList.remove('hidden');
+                patientField.classList.remove('hidden');
+                doctorSelectField.classList.add('hidden');
+            }
+            toggleModal('bookingModal', true);
+        }
+
+        function toDatetimeLocal(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            const tzOffset = date.getTimezoneOffset() * 60000;
+            return new Date(date - tzOffset).toISOString().slice(0, 16);
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const appointmentId = appointmentIdInput.value;
+            const doctorId = doctorSelectField.classList.contains('hidden') ? doctorIdInput.value.trim() : doctorSelect.value;
+            const patientId = currentRole === 'PATIENT' ? currentPatientId : patientIdInput.value.trim();
+            const scheduledAt = scheduledAtInput.value;
+            const reason = reasonInput.value.trim();
+            const status = statusInput.value;
+
+            if (!patientId) {
+                formError.textContent = 'Patient ID is required.';
+                return;
+            }
+            if (!doctorId) {
+                formError.textContent = 'Doctor ID is required.';
+                return;
+            }
+            if (!scheduledAt) {
+                formError.textContent = 'Appointment date/time is required.';
+                return;
+            }
+
+            const payload = { patient_id: patientId, doctor_id: parseInt(doctorId, 10), scheduled_at: scheduledAt, reason, status };
+            try {
+                if (appointmentId) {
+                    await apiRequest(`/appointments/${appointmentId}/`, 'PATCH', payload);
+                } else {
+                    await apiRequest('/appointments/', 'POST', payload);
+                }
+                await loadAppointments();
+                toggleModal('bookingModal', false);
+            } catch (error) {
+                formError.textContent = 'Unable to save appointment. Check IDs and try again.';
+            }
+        }
+
+        async function deleteAppointment(id) {
+            if (!confirm('Delete this appointment? This cannot be undone.')) return;
+            await apiRequest(`/appointments/${id}/`, 'DELETE');
+            await loadAppointments();
+        }
+
         function toggleModal(id, isOpen) {
             const backdrop = document.getElementById(id);
             const container = document.getElementById('modalContainer');
@@ -341,7 +493,6 @@
             }
         }
 
-        // 3. Side Drawer Controls System
         function toggleDrawer(isOpen) {
             const drawer = document.getElementById('viewAllDrawer');
             const inner = document.getElementById('drawerContainer');
@@ -354,13 +505,9 @@
             }
         }
 
-        // 4. Form Action Simulation
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            alert("Success! Your clinical request has been submitted to the provider network queues.");
-            toggleModal('bookingModal', false);
-            e.target.reset();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            initAppointments();
+        });
     </script>
 </body>
 </html>

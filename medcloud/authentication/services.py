@@ -37,7 +37,19 @@ def build_jwt_tokens(user):
     }
 
 
+def ensure_patient_profile_id(user):
+    if user.role != User.ROLE_PATIENT:
+        return
+    from patients.models import PatientProfile
+
+    profile, _ = PatientProfile.objects.get_or_create(user=user)
+    if not profile.patient_id:
+        profile.save()
+
+
 def send_registration_otp(user, purpose='registration', channel='email'):
+    ensure_patient_profile_id(user)
+
     if channel == 'sms' and user.phone_number:
         otp_record = OTPVerification.create_otp(user=user, phone_number=user.phone_number, purpose=purpose, sent_via='sms')
         try:

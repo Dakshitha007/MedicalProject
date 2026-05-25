@@ -10,12 +10,19 @@ from .serializers import DoctorProfileSerializer, DoctorVerificationSerializer
 class DoctorProfileViewSet(viewsets.ModelViewSet):
     queryset = DoctorProfile.objects.select_related('user').all()
     serializer_class = DoctorProfileSerializer
-    permission_classes = [IsAuthenticated, IsDoctor]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         if self.request.user.role == 'DOCTOR':
             return self.queryset.filter(user=self.request.user)
+        if self.request.user.role == 'PATIENT':
+            return self.queryset.filter(is_doctor_verified=True, verification_status='approved')
         return self.queryset.none()
+
+    def create(self, request, *args, **kwargs):
+        if request.user.role != 'DOCTOR':
+            return Response({'detail': 'Only doctors may create doctor profiles.'}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
