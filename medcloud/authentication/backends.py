@@ -8,6 +8,9 @@ class EmailOrUsernameBackend(ModelBackend):
         identifier = username or kwargs.get('email')
         if identifier is None or password is None:
             return None
+        identifier = identifier.strip()
+        if '@' in identifier:
+            identifier = identifier.lower()
         try:
             user = User.objects.get(Q(email__iexact=identifier) | Q(username__iexact=identifier))
         except User.DoesNotExist:

@@ -29,7 +29,9 @@ class LoginAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data or {}
-        identifier = data.get('email_or_username')
+        identifier = (data.get('email_or_username') or '').strip()
+        if '@' in identifier:
+            identifier = identifier.lower()
         password = data.get('password')
         role = data.get('role')
 
@@ -206,6 +208,7 @@ class GoogleSocialLoginAPIView(APIView):
         email = payload.get('email')
         if not email:
             return Response({'detail': 'Google account email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        email = email.strip().lower()
         user = User.objects.filter(email__iexact=email).first()
         role = serializer.validated_data['role']
         if user:

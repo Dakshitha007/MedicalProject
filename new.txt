@@ -1,0 +1,485 @@
+You are a senior Django full-stack architect and security engineer.
+
+Build a COMPLETE production-style backend architecture for my Django medical record management system.
+
+IMPORTANT:
+- My frontend UI already exists.
+- redesign the UI accordingly.
+- Only build and connect the backend properly with Django.
+- The system must support role-based authentication for DOCTORS and PATIENTS.
+- The backend must integrate seamlessly with the existing frontend pages.
+
+========================================================
+PROJECT OVERVIEW
+========================================================
+
+This is a cloud-based medical record system similar to DigiLocker for healthcare.
+
+The system contains:
+1. Login page
+2. Registration page
+3. Dashboard
+4. Medical reports
+5. Upload records
+6. Appointments
+7. Google Login
+8. OTP verification
+9. Role-based navigation and access control
+
+The project uses:
+- Django
+- Django REST Framework
+- PostgreSQL (preferred)
+- JWT Authentication
+- Google OAuth
+- OTP verification
+- Role-based permissions
+
+========================================================
+MAIN REQUIREMENTS
+========================================================
+
+Create a complete backend system with:
+
+1. Custom User Model
+2. Role-Based Access
+3. JWT Authentication
+4. OTP Verification
+5. Google Login
+6. Secure Session Handling
+7. Route Protection
+8. Navigation Permission Control
+9. Doctor Verification
+10. Patient Unique ID Generation
+11. Medical Record Management
+12. Appointment System
+13. Dashboard APIs
+
+========================================================
+USER ROLES
+========================================================
+
+There are ONLY TWO ROLES:
+
+1. PATIENT
+2. DOCTOR
+
+Store role in database.
+
+========================================================
+CUSTOM USER MODEL
+========================================================
+
+Create a fully customized Django user model.
+
+Fields:
+- id
+- email (unique)
+- username
+- role
+- phone_number
+- is_verified
+- is_active
+- created_at
+- updated_at
+
+Authentication must support:
+- Email login
+- Username login
+
+Passwords must be securely hashed using Django authentication system.
+
+========================================================
+LOGIN SYSTEM
+========================================================
+
+Implement login using:
+- Email OR Username
+- Password
+
+During login:
+1. Save entered email/username in database logs
+2. Verify password securely
+3. Return JWT access + refresh tokens
+4. Redirect according to role
+
+Doctor → Doctor Dashboard
+Patient → Patient Dashboard
+
+========================================================
+SPECIAL PASSWORD VALIDATION
+========================================================
+
+Password conditions:
+- Minimum 8 characters
+- At least 1 uppercase
+- At least 1 lowercase
+- At least 1 number
+- At least 1 special character
+
+Add one SPECIAL CASE:
+Prevent passwords containing:
+- user name
+- email name
+- "123456"
+- "password"
+
+Return proper validation messages.
+
+========================================================
+PATIENT REGISTRATION FLOW
+========================================================
+
+STEP 1:
+Patient enters:
+- name
+- age
+- gender
+- phone number
+- address
+- emergency contact
+- email
+
+STEP 2:
+Generate OTP and send via:
+- Email OTP
+OR
+- SMS OTP
+
+STEP 3:
+Verify OTP
+
+STEP 4:
+Generate UNIQUE PATIENT ID automatically.
+
+Patient ID format:
+PAT-YYYY-XXXX
+
+Example:
+PAT-2026-4821
+
+This ID must:
+- be unique
+- auto-generated
+- saved in database
+- used for future verification
+
+STEP 5:
+Patient creates password
+
+STEP 6:
+Store all patient data securely
+
+========================================================
+DOCTOR REGISTRATION FLOW
+========================================================
+
+Doctor registration requires stronger verification.
+
+Fields:
+- full_name
+- hospital_name
+- specialization
+- medical_license_number
+- years_of_experience
+- email
+- phone number
+- password
+
+Doctor verification process:
+1. OTP verification
+2. Medical license verification
+3. Hospital verification
+
+IMPORTANT:
+Suggest and implement BEST possible doctor verification methods.
+
+Use these verification strategies:
+
+A. License Verification:
+- Store medical_license_number
+- Validate format
+- Admin approval required initially
+
+B. Hospital Verification:
+- Use official hospital email domain
+Example:
+doctor@apollohospital.com
+
+C. Admin Verification:
+- Doctor account remains "pending"
+until admin approves.
+
+Fields:
+- is_doctor_verified
+- verification_status
+
+Statuses:
+- pending
+- approved
+- rejected
+
+DO NOT allow unverified doctors to upload reports.
+
+========================================================
+GOOGLE LOGIN
+========================================================
+
+Implement Google OAuth login using:
+- django-allauth
+OR
+- social-auth-app-django
+
+Google login must ALSO support role-based flow.
+
+FIRST-TIME GOOGLE LOGIN:
+Ask user:
+- Select role
+- Complete verification
+
+Patient:
+- OTP verification
+- Generate Patient ID
+
+Doctor:
+- OTP verification
+- License verification
+- Admin approval
+
+RETURN JWT TOKENS after successful verification.
+
+========================================================
+ROLE-BASED NAVIGATION
+========================================================
+
+PATIENT NAVIGATION:
+- Dashboard
+- Medical Reports
+- Appointments
+
+DOCTOR NAVIGATION:
+- Dashboard
+- Medical Reports
+- Upload Session
+
+Implement backend permission middleware.
+
+If patient tries accessing doctor route:
+Return:
+403 Forbidden
+
+========================================================
+ROUTE PROTECTION
+========================================================
+
+Protect ALL APIs using JWT authentication.
+
+Create:
+- RolePermission classes
+- Middleware
+- Decorators
+
+Example:
+@doctor_required
+@patient_required
+
+========================================================
+MEDICAL REPORT SYSTEM
+========================================================
+
+Doctors can:
+- Upload reports
+- Create diagnosis
+- Add prescriptions
+
+Patients can:
+- View own reports only
+
+Reports should include:
+- uploaded_by
+- patient_id
+- diagnosis
+- file upload
+- timestamps
+
+========================================================
+DASHBOARD SYSTEM
+========================================================
+
+Patient dashboard:
+- appointments
+- reports
+- medications
+- vitals
+
+Doctor dashboard:
+- total patients
+- uploaded reports
+- appointments
+- pending verifications
+
+========================================================
+DATABASE MODELS
+========================================================
+
+Create all required models:
+
+1. User
+2. PatientProfile
+3. DoctorProfile
+4. OTPVerification
+5. MedicalReport
+6. Appointment
+7. LoginHistory
+8. Notification
+
+Add proper:
+- Foreign keys
+- Constraints
+- Signals
+- Validators
+
+========================================================
+OTP SYSTEM
+========================================================
+
+Implement OTP system using:
+- random secure OTP generator
+- expiry time
+- resend OTP
+- max retry protection
+
+OTP expires in:
+5 minutes
+
+========================================================
+SECURITY REQUIREMENTS
+========================================================
+
+Implement:
+- CSRF protection
+- JWT refresh
+- rate limiting
+- brute-force protection
+- encrypted sensitive fields
+- secure file uploads
+- validation everywhere
+
+========================================================
+API STRUCTURE
+========================================================
+
+Create:
+- serializers.py
+- views.py
+- urls.py
+- permissions.py
+- services.py
+- utils.py
+
+Use clean architecture.
+
+========================================================
+REQUIRED DJANGO APPS
+========================================================
+
+Create apps:
+- authentication
+- patients
+- doctors
+- reports
+- appointments
+- dashboard
+- notifications
+
+========================================================
+DELIVERABLES
+========================================================
+
+Generate COMPLETE code for:
+- models.py
+- serializers.py
+- views.py
+- urls.py
+- permissions.py
+- middleware.py
+- signals.py
+- utils.py
+- admin.py
+
+Also generate:
+- API endpoints
+- Folder structure
+- JWT setup
+- Google OAuth setup
+- PostgreSQL setup
+- settings.py configuration
+
+========================================================
+FRONTEND CONNECTION
+========================================================
+
+Assume frontend already exists.
+
+Provide:
+- API endpoints for frontend integration
+- Response JSON formats
+- Authentication flow
+- Navigation redirection logic
+
+========================================================
+EXPECTED OUTPUT
+========================================================
+
+Generate:
+1. Full Django backend architecture
+2. Complete database schema
+3. Authentication flow
+4. OTP flow
+5. Google OAuth flow
+6. Doctor verification flow
+7. Patient verification flow
+8. Route permission system
+9. Role-based navigation control
+10. API documentation
+11. Setup instructions
+12. Testing strategy
+
+========================================================
+IMPORTANT ENGINEERING RULES
+========================================================
+
+- Use production-level coding standards
+- Use modular architecture
+- Avoid duplicate code
+- Use service layer pattern
+- Add comments everywhere
+- Add error handling
+- Add validation everywhere
+- Use REST best practices
+- Use secure coding practices
+- Use environment variables
+- Make code scalable
+
+========================================================
+BONUS FEATURES
+========================================================
+
+If possible also implement:
+- Audit logs
+- Email notifications
+- Password reset via OTP
+- Refresh token rotation
+- Device login tracking
+- Suspicious login detection
+- Admin verification dashboard
+
+========================================================
+VERY IMPORTANT
+========================================================
+
+I want COMPLETE backend implementation code.
+Do NOT give theory alone.
+Generate actual Django code with explanations.
+Generate files one by one properly.
+Ensure everything works together without architecture conflicts.

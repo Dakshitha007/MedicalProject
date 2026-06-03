@@ -9,6 +9,12 @@ from .services import build_jwt_tokens, create_login_history, send_registration_
 from .utils import get_email_domain, get_hospital_domains, validate_license_number
 
 
+def normalize_email(value):
+    if not isinstance(value, str):
+        return value
+    return value.strip().lower()
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -29,9 +35,13 @@ class LoginSerializer(serializers.Serializer):
         identifier = attrs.get('email_or_username')
         password = attrs.get('password')
         role = attrs.get('role')
-        user = authenticate(request=self.context.get('request'), username=identifier, password=password)
+        if identifier and '@' in identifier:
+            attrs['email_or_username'] = normalize_email(identifier)
+        else:
+            attrs['email_or_username'] = identifier.strip() if identifier else identifier
+        user = authenticate(request=self.context.get('request'), username=attrs['email_or_username'], password=password)
         if user is None:
-            create_login_history(identifier, successful=False, request=self.context.get('request'))
+            create_login_history(attrs['email_or_username'], successful=False, request=self.context.get('request'))
             raise serializers.ValidationError({'detail': 'Invalid credentials or user does not exist.'})
         if user.role != role:
             create_login_history(identifier, user=user, successful=False, request=self.context.get('request'), note='Role mismatch')
@@ -54,9 +64,10 @@ class PatientRegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     def validate_email(self, value):
+        value = normalize_email(value)
         if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError('A user with this email already exists.')
-        return value.lower()
+        return value
 
     def create(self, validated_data):
         username = validated_data['email'].split('@')[0]
@@ -92,11 +103,13 @@ class OTPVerifySerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get('email')
         phone_number = attrs.get('phone_number')
-        if not email and not phone_number:
+        if email:
+            attrs['email'] = normalize_email(email)
+        if not attrs.get('email') and not phone_number:
             raise serializers.ValidationError({'detail': 'Email or phone number is required for OTP verification.'})
         code = attrs.get('code')
         purpose = attrs.get('purpose')
-        otp, error = verify_otp_code(email=email, phone_number=phone_number, code=code, purpose=purpose)
+        otp, error = verify_otp_code(email=attrs.get('email'), phone_number=phone_number, code=code, purpose=purpose)
         if error:
             raise serializers.ValidationError({'detail': error})
         attrs['otp'] = otp
@@ -107,6 +120,9 @@ class PasswordSetSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     password_confirm = serializers.CharField(write_only=True)
+
+    def validate_email(self, value):
+        return normalize_email(value)
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
@@ -138,9 +154,10 @@ class DoctorRegistrationSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=32)
 
     def validate_email(self, value):
+        value = normalize_email(value)
         if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError('A user with this email already exists.')
-        return value.lower()
+        return value
 
     def validate_medical_license_number(self, value):
         if not validate_license_number(value):
