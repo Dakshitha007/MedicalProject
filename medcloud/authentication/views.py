@@ -18,6 +18,7 @@ from .serializers import (
     PatientRegistrationSerializer,
 )
 from .services import build_jwt_tokens, create_login_history, send_registration_otp, verify_otp_code
+from allauth.socialaccount.models import SocialAccount
 from doctors.models import DoctorProfile
 from patients.models import PatientProfile
 from .utils import get_email_domain, get_hospital_domains
@@ -215,7 +216,12 @@ class GoogleSocialLoginAPIView(APIView):
             if user.role != role:
                 return Response({'detail': 'Role mismatch for existing Google user.'}, status=status.HTTP_400_BAD_REQUEST)
             if not user.is_active:
-                return Response({'detail': 'User account is not active.'}, status=status.HTTP_403_FORBIDDEN)
+                if SocialAccount.objects.filter(user=user, provider='google').exists():
+                    user.is_active = True
+                    user.is_verified = True
+                    user.save(update_fields=['is_active', 'is_verified'])
+                else:
+                    return Response({'detail': 'User account is not active.'}, status=status.HTTP_403_FORBIDDEN)
             tokens = build_jwt_tokens(user)
             return Response(tokens, status=status.HTTP_200_OK)
 

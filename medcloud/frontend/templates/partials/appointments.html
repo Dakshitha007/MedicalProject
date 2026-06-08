@@ -236,12 +236,12 @@
         const appointmentIdInput = document.getElementById('appointmentIdInput');
 
         let appointments = [];
-        let currentRole = localStorage.getItem('user_role') || '';
+        let currentRole = localStorage.getItem('user_role') || (window.CURRENT_USER && window.CURRENT_USER.role) || '';
         let currentPatientId = null;
         let currentDoctorId = null;
 
         async function initAppointments() {
-            if (!localStorage.getItem('access_token')) {
+            if (!localStorage.getItem('access_token') && !window.CURRENT_USER) {
                 window.location.href = '/';
                 return;
             }

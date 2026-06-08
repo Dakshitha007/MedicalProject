@@ -143,7 +143,9 @@
                     <button type="button" class="google-role-pill" data-role="DOCTOR">Doctor</button>
                 </div>
                 <div id="googleError" class="hidden rounded-3xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200" role="alert"></div>
-                <div id="googleSignInButton" class="mt-4"></div>
+                <button id="googleRedirectButton" type="button" class="w-full rounded-3xl bg-white text-slate-950 font-semibold px-6 py-3 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50">
+                    Continue with Google
+                </button>
             </div>
 
             <p class="mt-6 text-center text-sm text-slate-400">Need an account? <a href="/register/" class="font-semibold text-blue-300 hover:text-white">Register now</a></p>
@@ -165,7 +167,7 @@
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
         const googleError = document.getElementById('googleError');
-        const googleSignInContainer = document.getElementById('googleSignInButton');
+        const googleRedirectButton = document.getElementById('googleRedirectButton');
         const roleButtons = document.querySelectorAll('.role-pill');
         const googleRoleButtons = document.querySelectorAll('.google-role-pill');
 
@@ -213,6 +215,17 @@
 
         googleRoleButtons.forEach((button) => {
             button.addEventListener('click', () => setActiveRole(googleRoleButtons, button.dataset.role));
+        });
+
+        googleRedirectButton.addEventListener('click', () => {
+            const selected = Array.from(googleRoleButtons).find((button) => button.classList.contains('active'));
+            const role = selected ? selected.dataset.role : null;
+            if (!role) {
+                googleError.innerText = 'Please select a role before continuing with Google.';
+                googleError.classList.remove('hidden');
+                return;
+            }
+            window.location.href = `/google-login/${role}/`;
         });
 
         loginForm.addEventListener('submit', async (e) => {
@@ -280,44 +293,6 @@
             }
         }
 
-        async function handleGoogleCredential(response) {
-            googleError.classList.add('hidden');
-            const selected = Array.from(googleRoleButtons).find((button) => button.classList.contains('active'));
-            const role = selected ? selected.dataset.role : null;
-            if (!role) {
-                googleError.innerText = 'Please select a Google role before continuing.';
-                googleError.classList.remove('hidden');
-                return;
-            }
-
-            setLoading(true);
-            try {
-                const googleResponse = await fetch(`${API_BASE}/auth/google/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),
-                    },
-                    body: JSON.stringify({
-                        id_token: response.credential,
-                        role,
-                    }),
-                });
-                const data = await googleResponse.json();
-                if (googleResponse.ok && data.access && data.refresh) {
-                    finalizeLogin({ role, id: data.user?.id || '', email: data.user?.email || '' }, data.access, data.refresh);
-                    return;
-                }
-                googleError.innerText = data.detail || 'Google sign-in failed. Please try again.';
-                googleError.classList.remove('hidden');
-            } catch (error) {
-                console.error('Google login error:', error);
-                googleError.innerText = 'Unable to connect to the server.';
-                googleError.classList.remove('hidden');
-            }
-            setLoading(false);
-        }
-
         function setLoading(active) {
             submitButton.disabled = active;
             btnSpinner.classList.toggle('hidden', !active);
@@ -339,27 +314,6 @@
             }
             return cookieValue;
         }
-    </script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script>
-        window.onload = function() {
-            const googleClientId = '{{ google_client_id }}';
-            if (!googleClientId) {
-                console.warn('Google OAuth client is not configured. Set GOOGLE_CLIENT_ID in the environment.');
-                googleSignInContainer.innerHTML = '<div class="text-sm text-slate-500">Google sign-in unavailable.</div>';
-                return;
-            }
-
-            google.accounts.id.initialize({
-                client_id: googleClientId,
-                callback: handleGoogleCredential,
-            });
-
-            google.accounts.id.renderButton(
-                googleSignInContainer,
-                { theme: 'outline', size: 'large', width: '100%' }
-            );
-        };
     </script>
 </body>
 </html>

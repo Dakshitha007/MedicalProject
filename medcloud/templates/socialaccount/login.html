@@ -1,0 +1,91 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Signing in with Google" %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'frontend/css/auth-brand.css' %}">
+</head>
+<body class="auth-shell bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-slate-100">
+    <div class="auth-container">
+        <div class="auth-card glass-panel max-w-3xl overflow-hidden">
+            <div class="auth-header p-8 lg:p-10">
+                <div class="brand-badge">
+                    <div class="brand-icon">M</div>
+                    <div>
+                        <p class="brand-label">MedCloud</p>
+                        <p class="brand-tag">Google authentication in progress</p>
+                    </div>
+                </div>
+                <div class="auth-stepper mt-8">
+                    <div class="step-item completed"><span></span> Choose role</div>
+                    <div class="step-item active"><span></span> Google authentication</div>
+                    <div class="step-item"><span></span> Dashboard access</div>
+                </div>
+            </div>
+            <div class="auth-body p-8 lg:p-10 grid gap-8 lg:grid-cols-[0.95fr_0.9fr]">
+                <div class="glass-panel panel-info p-8">
+                    <h1 class="text-3xl font-semibold text-white">Continue with Google</h1>
+                    <p class="mt-4 text-slate-300 leading-7">Your selected role is <strong class="text-sky-300">{{ request.session.google_auth_role|default:"Patient"|title }}</strong>. We are verifying your identity and preserving your account access securely.</p>
+                    <div class="mt-8 grid gap-4">
+                        <div class="badge-row">
+                            <div class="auth-badge">HIPAA compliant</div>
+                            <div class="auth-badge">Enterprise security</div>
+                        </div>
+                        <div class="badge-row">
+                            <div class="auth-badge">Encrypted session</div>
+                            <div class="auth-badge">Trusted Google OAuth</div>
+                        </div>
+                    </div>
+                    <div class="mt-8 p-5 rounded-3xl bg-white/5 border border-white/10">
+                        <h2 class="text-lg font-semibold text-white">Privacy and security</h2>
+                        <p class="mt-2 text-slate-300 text-sm leading-6">MedCloud uses secure Google OAuth with strict session protection. We do not share protected health information with unauthorized parties.</p>
+                    </div>
+                </div>
+                <div class="glass-panel panel-cta p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-slate-400 text-sm uppercase tracking-[0.24em] mb-4">Authentication in progress</div>
+                        <div class="oauth-card rounded-3xl border border-slate-800/80 bg-slate-950/90 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.75)]">
+                            <div class="flex items-center gap-3">
+                                <div class="google-icon-circle">G</div>
+                                <div>
+                                    <p class="font-semibold text-white">Google Sign-In</p>
+                                    <p class="text-slate-400 text-sm">Redirecting you to Google to finish authentication.</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 rounded-3xl bg-slate-900/90 p-4">
+                                <div class="flex items-center justify-between text-slate-100 text-sm">
+                                    <span>Loading secure session</span>
+                                    <span class="text-sky-300">{{ provider.name }}</span>
+                                </div>
+                                <div class="progress-bar mt-4">
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div class="text-slate-400 text-sm">If the redirect does not begin automatically, press continue.</div>
+                        <form method="post" id="social-login-form" class="mt-5">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-google w-full flex items-center justify-center gap-3">
+                                <span class="google-icon">G</span>
+                                Continue with Google
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                document.getElementById('social-login-form').submit();
+            }, 250);
+        });
+    </script>
+</body>
+</html>

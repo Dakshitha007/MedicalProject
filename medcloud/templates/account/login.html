@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCloud | Secure Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'frontend/css/auth-brand.css' %}">
+</head>
+<body class="auth-shell bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-slate-100">
+    <div class="auth-container">
+        <div class="auth-card glass-panel overflow-hidden">
+            <div class="auth-hero relative p-8 lg:p-10">
+                <div class="brand-badge">
+                    <div class="brand-icon">M</div>
+                    <div>
+                        <p class="brand-label">MedCloud</p>
+                        <p class="brand-tag">Healthcare Identity Platform</p>
+                    </div>
+                </div>
+                <div class="illustration-panel hidden xl:block" aria-hidden="true">
+                    <div class="illustration-bg"></div>
+                    <div class="illustration-graphic"></div>
+                </div>
+                <div class="py-8">
+                    <p class="eyebrow">Enterprise-grade healthcare access</p>
+                    <h1 class="auth-title">Secure sign in to your MedCloud workspace</h1>
+                    <p class="auth-copy">Fast, compliant authentication for doctors and patients with HIPAA-grade safeguards and seamless Google SSO.</p>
+                </div>
+            </div>
+            <div class="auth-body p-8 lg:p-10">
+                <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+                    <div class="space-y-6">
+                        <div class="panel-block glass-panel p-6">
+                            <h2 class="panel-title">Sign in with email</h2>
+                            <p class="panel-copy">Use your MedCloud credentials for full portal access.</p>
+                            <form method="post" action="" class="space-y-6" novalidate>
+                                {% csrf_token %}
+                                {{ form.hidden_fields }}
+                                {% if form.non_field_errors %}
+                                    <div class="alert-danger" role="alert">{{ form.non_field_errors }}</div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <label for="id_login">Email or Username</label>
+                                    {{ form.login }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_password">Password</label>
+                                    {{ form.password }}
+                                </div>
+                                {% if form.remember %}
+                                    <div class="flex items-center gap-2 text-sm text-slate-300">
+                                        {{ form.remember }}
+                                        <label for="id_remember">Remember me</label>
+                                    </div>
+                                {% endif %}
+                                <button type="submit" class="btn-primary w-full">Sign in securely</button>
+                            </form>
+                        </div>
+                        <div class="panel-block glass-panel p-6 border-slate-800/70">
+                            <div class="flex items-center justify-between gap-3">
+                                <div>
+                                    <p class="panel-title">Continue with Google</p>
+                                    <p class="panel-copy">Choose your role then authenticate with Google to enter the portal.</p>
+                                </div>
+                                <span class="google-badge">Google</span>
+                            </div>
+                            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                                <button type="button" class="role-select-btn active" data-role="PATIENT">Continue as Patient</button>
+                                <button type="button" class="role-select-btn" data-role="DOCTOR">Continue as Doctor</button>
+                            </div>
+                            <button id="googleRedirectButton" type="button" class="btn-google w-full mt-6">
+                                <span class="google-icon" aria-hidden="true">G</span>
+                                Continue with Google
+                            </button>
+                            <p class="mt-5 text-sm text-slate-400">By continuing, you agree to MedCloud’s privacy and HIPAA-compliant authentication workflows.</p>
+                        </div>
+                    </div>
+                    <div class="panel-card glass-panel p-6">
+                        <div class="status-pill">Secure access</div>
+                        <div class="progress-grid">
+                            <div class="step active"><span>1</span> Identity</div>
+                            <div class="step active"><span>2</span> Authentication</div>
+                            <div class="step"><span>3</span> Dashboard</div>
+                        </div>
+                        <div class="security-list mt-6 space-y-4">
+                            <div class="security-item">
+                                <strong>HIPAA-ready</strong>
+                                <p class="text-sm text-slate-400">Encrypted sign-in with secure session handling and audit-ready flows.</p>
+                            </div>
+                            <div class="security-item">
+                                <strong>Enterprise compliance</strong>
+                                <p class="text-sm text-slate-400">Role-aware access for doctors and patients mapped to the correct dashboard.</p>
+                            </div>
+                            <div class="security-item">
+                                <strong>Responsive</strong>
+                                <p class="text-sm text-slate-400">Optimized for desktop, tablet, and mobile healthcare workflows.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const roleButtons = document.querySelectorAll('.role-select-btn');
+        const googleRedirectButton = document.getElementById('googleRedirectButton');
+        let selectedRole = 'PATIENT';
+
+        function updateRoleSelection() {
+            roleButtons.forEach((button) => {
+                button.classList.toggle('active', button.dataset.role === selectedRole);
+            });
+        }
+
+        roleButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                selectedRole = button.dataset.role;
+                updateRoleSelection();
+            });
+        });
+
+        googleRedirectButton.addEventListener('click', () => {
+            window.location.href = `/google-login/${selectedRole}/`;
+        });
+
+        updateRoleSelection();
+    </script>
+</body>
+</html>

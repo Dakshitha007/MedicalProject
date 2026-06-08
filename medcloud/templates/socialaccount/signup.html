@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCloud | Confirm your role</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'frontend/css/auth-brand.css' %}">
+</head>
+<body class="auth-shell bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-slate-100">
+    <div class="auth-container">
+        <div class="auth-card glass-panel max-w-4xl overflow-hidden">
+            <div class="auth-header p-8 lg:p-10">
+                <div class="brand-badge">
+                    <div class="brand-icon">M</div>
+                    <div>
+                        <p class="brand-label">MedCloud</p>
+                        <p class="brand-tag">Role confirmation for Google sign-up</p>
+                    </div>
+                </div>
+                <div class="auth-stepper mt-8">
+                    <div class="step-item completed"><span></span> Role selection</div>
+                    <div class="step-item active"><span></span> Confirm details</div>
+                    <div class="step-item"><span></span> Finalize access</div>
+                </div>
+            </div>
+            <div class="auth-body p-8 lg:p-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+                <div class="glass-panel panel-info p-8">
+                    <h1 class="text-3xl font-semibold text-white">Confirm your Google access</h1>
+                    <p class="mt-4 text-slate-300 leading-7">This is your first sign-in with Google. Confirm your role and finish onboarding to unlock the doctor or patient dashboard immediately.</p>
+                    <div class="mt-8 grid gap-4">
+                        <div class="badge-row">
+                            <div class="auth-badge">Role persistency</div>
+                            <div class="auth-badge">HIPAA safe</div>
+                        </div>
+                        <div class="badge-row">
+                            <div class="auth-badge">Google OAuth</div>
+                            <div class="auth-badge">Secure medical access</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel panel-cta p-8">
+                    <form method="post" action="" class="space-y-6">
+                        {% csrf_token %}
+                        {{ form.hidden_fields }}
+                        {% if form.non_field_errors %}
+                            <div class="alert-danger" role="alert">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="space-y-5">
+                            <div>
+                                <p class="text-sm uppercase tracking-[0.3em] text-slate-500 mb-3">Selected role</p>
+                                {% if request.session.google_auth_role %}
+                                    <div class="role-pill active inline-flex items-center gap-2">
+                                        <span class="role-dot"></span>
+                                        {{ request.session.google_auth_role|title }}
+                                    </div>
+                                {% else %}
+                                    <div class="grid gap-3 sm:grid-cols-2">
+                                        {{ form.role }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if not request.session.google_auth_role %}
+                                <p class="text-sm text-slate-400">Select your primary role for this MedCloud account.</p>
+                            {% else %}
+                                <p class="text-sm text-slate-400">We will save this role permanently for your account routing.</p>
+                            {% endif %}
+                            <div class="form-group">
+                                <label for="id_username">Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="grid gap-6 sm:grid-cols-2">
+                                <div class="form-group">
+                                    <label for="id_first_name">First name</label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_last_name">Last name</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Complete Google onboarding</button>
+                    </form>
+                </div>
+            </div>
+            <div class="panel-footer p-6 border-t border-white/10 bg-slate-950/70">
+                <p class="text-sm text-slate-400">After approval, you will be routed to the appropriate dashboard for your role.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

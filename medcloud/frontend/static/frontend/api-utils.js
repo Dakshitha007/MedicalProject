@@ -30,11 +30,17 @@ function isAuthenticated() {
  * Get user info from localStorage
  */
 function getUser() {
-    return {
+    const stored = {
         id: localStorage.getItem('user_id'),
         email: localStorage.getItem('user_email'),
         role: localStorage.getItem('user_role')
     };
+
+    if (stored.id || stored.email || stored.role) {
+        return stored;
+    }
+
+    return window.CURRENT_USER || { id: null, email: '', role: '' };
 }
 
 /**
@@ -59,22 +65,19 @@ function requireRole(requiredRole) {
  */
 async function apiCall(endpoint, method = 'GET', body = null) {
     const token = localStorage.getItem('access_token');
-    
-    if (!token) {
-        console.warn('No authentication token found');
-        window.location.href = '/';
-        return null;
-    }
-
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
         'X-CSRFToken': getCookie('csrftoken')
     };
 
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const options = {
         method,
-        headers
+        headers,
+        credentials: 'include',
     };
 
     if (body && method !== 'GET') {
@@ -85,15 +88,16 @@ async function apiCall(endpoint, method = 'GET', body = null) {
         const response = await fetch(`${API_BASE}${endpoint}`, options);
 
         if (response.status === 401) {
-            console.warn('Token expired, attempting refresh');
-            const refreshed = await refreshToken();
-            if (refreshed) {
-                return apiCall(endpoint, method, body);
-            } else {
-                localStorage.clear();
-                window.location.href = '/';
-                return null;
+            if (token) {
+                console.warn('Token expired, attempting refresh');
+                const refreshed = await refreshToken();
+                if (refreshed) {
+                    return apiCall(endpoint, method, body);
+                }
             }
+            localStorage.clear();
+            window.location.href = '/';
+            return null;
         }
 
         if (response.status === 403) {

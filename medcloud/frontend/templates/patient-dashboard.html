@@ -14,6 +14,9 @@
 {% load static %}
 </head>
 <body class="bg-[#0f172a] text-slate-200 font-sans flex h-screen overflow-hidden">
+    <script>
+        window.CURRENT_USER = {{ current_user_json|safe }};
+    </script>
 
     <aside class="w-72 bg-[#1e293b] border-r border-slate-700 flex flex-col shrink-0">
         <div class="p-8 flex items-center gap-3">
@@ -43,9 +46,9 @@
                 <a href="#settings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 text-slate-400 transition">
                     <i data-lucide="settings" class="w-5 h-5"></i> Settings
                 </a>
-                <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-red-500/10 text-red-400 transition mt-10 text-left">
+                <a href="/logout/" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-red-500/10 text-red-400 transition mt-10 text-left">
                     <i data-lucide="log-out" class="w-5 h-5"></i> Sign Out
-                </button>
+                </a>
             </div>
         </nav>
     </aside>
