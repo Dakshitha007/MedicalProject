@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard | CLINIK</title>
+    <title>Patient Dashboard | DiagoVault AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
     </style>
 {% load static %}
 </head>
-<body class="bg-[#0f172a] text-slate-200 font-sans flex h-screen overflow-hidden">
+<body class="bg-white text-slate-900 font-sans flex h-screen overflow-hidden">
     <script>
         window.CURRENT_USER = {{ current_user_json|safe }};
     </script>
 
-    <aside class="w-72 bg-[#1e293b] border-r border-slate-700 flex flex-col shrink-0">
+    <aside class="w-72 bg-white border-r border-slate-100 flex flex-col shrink-0">
         <div class="p-8 flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                <i data-lucide="activity" class="text-white w-6 h-6"></i>
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
             </div>
-            <span class="text-2xl font-bold text-white tracking-tight">CLINIK</span>
+            <span class="text-2xl font-bold text-slate-900 tracking-tight">DiagoVault AI</span>
         </div>
         
         <nav class="flex-1 px-4 space-y-2">
@@ -31,19 +30,19 @@
             <a href="/dashboard/patient/" class="flex items-center gap-3 p-3 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-900/20">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
-            <a href="/reports/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 text-slate-400 transition">
+            <a href="/reports/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 text-slate-700 transition">
                 <i data-lucide="file-text" class="w-5 h-5"></i> Medical Reports
             </a>
-            <a href="/upload/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 text-slate-400 transition">
+            <a href="/upload/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 text-slate-700 transition">
                 <i data-lucide="cloud-upload" class="w-5 h-5"></i> Upload Records
             </a>
-            <a href="#appointments" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 text-slate-400 transition">
+            <a href="#appointments" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 text-slate-700 transition">
                 <i data-lucide="calendar" class="w-5 h-5"></i> Appointments
             </a>
             
             <div class="pt-8">
                 <p class="text-xs font-semibold text-slate-500 uppercase px-4 mb-2">Account</p>
-                <a href="#settings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700 text-slate-400 transition">
+                <a href="#settings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 text-slate-700 transition">
                     <i data-lucide="settings" class="w-5 h-5"></i> Settings
                 </a>
                 <a href="/logout/" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-red-500/10 text-red-400 transition mt-10 text-left">
@@ -58,12 +57,12 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-white mb-2">Welcome back, <span id="userName">Patient</span></h1>
-                    <p class="text-slate-400">Here's your medical dashboard overview</p>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">Welcome back, <span id="userName">Patient</span></h1>
+                    <p class="text-slate-600">Here's your medical dashboard overview</p>
                 </div>
                 <div id="userInfo" class="text-right">
-                    <p class="text-slate-400">Logged in as</p>
-                    <p class="text-white font-semibold" id="userEmail">-</p>
+                    <p class="text-slate-600">Logged in as</p>
+                    <p class="text-slate-900 font-semibold" id="userEmail">-</p>
                 </div>
             </div>
 
@@ -77,11 +76,11 @@
             <div id="dashboardContent" class="hidden">
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-slate-400 text-sm mb-2">Upcoming Appointments</p>
-                                <p class="text-3xl font-bold text-white" id="appointmentsCount">0</p>
+                                <p class="text-slate-600 text-sm mb-2">Upcoming Appointments</p>
+                                <p class="text-3xl font-bold text-slate-900" id="appointmentsCount">0</p>
                             </div>
                             <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
                                 <i data-lucide="calendar" class="text-blue-400 w-6 h-6"></i>
@@ -89,11 +88,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-slate-400 text-sm mb-2">Medical Reports</p>
-                                <p class="text-3xl font-bold text-white" id="reportsCount">0</p>
+                                <p class="text-slate-600 text-sm mb-2">Medical Reports</p>
+                                <p class="text-3xl font-bold text-slate-900" id="reportsCount">0</p>
                             </div>
                             <div class="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
                                 <i data-lucide="file-text" class="text-green-400 w-6 h-6"></i>
@@ -101,11 +100,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-slate-400 text-sm mb-2">Active Medications</p>
-                                <p class="text-3xl font-bold text-white" id="medicationsCount">0</p>
+                                <p class="text-slate-600 text-sm mb-2">Active Medications</p>
+                                <p class="text-3xl font-bold text-slate-900" id="medicationsCount">0</p>
                             </div>
                             <div class="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
                                 <i data-lucide="pill" class="text-purple-400 w-6 h-6"></i>
@@ -113,11 +112,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-slate-400 text-sm mb-2">Unread Messages</p>
-                                <p class="text-3xl font-bold text-white" id="notificationsCount">0</p>
+                                <p class="text-slate-600 text-sm mb-2">Unread Messages</p>
+                                <p class="text-3xl font-bold text-slate-900" id="notificationsCount">0</p>
                             </div>
                             <div class="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
                                 <i data-lucide="bell" class="text-orange-400 w-6 h-6"></i>
@@ -129,10 +128,10 @@
                 <!-- Quick Actions -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Upcoming Appointments -->
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-white">Upcoming Appointments</h3>
-                            <a href="#" class="text-blue-400 hover:underline text-sm">View all</a>
+                            <h3 class="text-xl font-bold text-slate-900">Upcoming Appointments</h3>
+                            <a href="#" class="text-blue-600 hover:underline text-sm">View all</a>
                         </div>
                         <div id="appointmentsList" class="space-y-4">
                             <p class="text-slate-500 text-sm">No upcoming appointments</p>
@@ -140,10 +139,10 @@
                     </div>
 
                     <!-- Recent Reports -->
-                    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-white">Recent Reports</h3>
-                            <a href="/reports/" class="text-blue-400 hover:underline text-sm">View all</a>
+                            <h3 class="text-xl font-bold text-slate-900">Recent Reports</h3>
+                            <a href="/reports/" class="text-blue-600 hover:underline text-sm">View all</a>
                         </div>
                         <div id="reportsList" class="space-y-4">
                             <p class="text-slate-500 text-sm">No reports available</p>

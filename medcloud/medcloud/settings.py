@@ -16,7 +16,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
-PROJECT_NAME = os.getenv('PROJECT_NAME', 'MedCloud')
+PROJECT_NAME = os.getenv('PROJECT_NAME', 'DiagoVault AI')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'replace-this-secret-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ['true', '1', 'yes']
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]

@@ -1,20 +1,63 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Register - CLINIK</title>
+    <title>Register - DiagoVault AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-6 text-slate-200">
-<div class="max-w-3xl w-full bg-slate-950/90 border border-slate-800 rounded-2xl p-10">
-    <h1 class="text-3xl font-bold mb-4">Create an account</h1>
-    <p class="text-slate-400 mb-6">Choose how you want to register.</p>
-    <div class="grid grid-cols-2 gap-4">
-        <a href="/register/patient/" class="p-6 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 hover:from-blue-600 hover:to-cyan-600 text-center">Patient<br><span class="text-sm text-slate-300">Personal account</span></a>
-        <a href="/register/doctor/" class="p-6 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 hover:from-purple-600 hover:to-pink-600 text-center">Doctor<br><span class="text-sm text-slate-300">Professional account</span></a>
+<body class="bg-slate-50 min-h-screen text-slate-900">
+    <div class="mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 py-12">
+        <header class="mb-12 flex items-center justify-between rounded-3xl bg-white p-6 shadow-lg shadow-slate-200/80">
+            <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-blue-600 text-white shadow-lg shadow-blue-500/20">
+                    <svg viewBox="0 0 24 24" class="h-7 w-7"><path d="M12 3L9.5 8H4l4 3.5L6.5 18 12 14.5 17.5 18 16 11.5 20 8h-5.5L12 3z" fill="currentColor"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xl font-semibold tracking-tight">DiagoVault AI</p>
+                    <p class="text-sm text-slate-500">Choose your registration path</p>
+                </div>
+            </div>
+            <a href="/" class="rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Back to home</a>
+        </header>
+
+        <main class="grid gap-6 rounded-[32px] bg-white p-8 shadow-xl shadow-slate-200/80 sm:grid-cols-2">
+            <a href="/register/patient/" class="group rounded-[32px] border border-slate-200 p-8 transition hover:-translate-y-1 hover:shadow-xl hover:border-blue-200">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-blue-50 text-blue-700">
+                        <svg viewBox="0 0 24 24" class="h-6 w-6"><path d="M12 2a7 7 0 017 7v4h2l-3 3-3-3h2V9a5 5 0 10-10 0v4H4l-3 3 3-3h2V9a7 7 0 017-7z" fill="currentColor"/></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold text-slate-900">Patient Account</h1>
+                        <p class="mt-2 text-sm text-slate-500">Register to manage your medical records securely.</p>
+                    </div>
+                </div>
+                <div class="mt-8 flex items-center justify-between text-sm font-semibold text-blue-600">
+                    <span>Start registration</span>
+                    <span>&rarr;</span>
+                </div>
+            </a>
+            <a href="/register/doctor/" class="group rounded-[32px] border border-slate-200 p-8 transition hover:-translate-y-1 hover:shadow-xl hover:border-blue-200">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-sky-50 text-sky-700">
+                        <svg viewBox="0 0 24 24" class="h-6 w-6"><path d="M12 2a7 7 0 00-7 7v4H3l3 3 3-3H8V9a5 5 0 0110 0v4h-1l3 3 3-3h-2V9a7 7 0 00-7-7z" fill="currentColor"/></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold text-slate-900">Doctor Account</h1>
+                        <p class="mt-2 text-sm text-slate-500">Register with professional credentials for clinical access.</p>
+                    </div>
+                </div>
+                <div class="mt-8 flex items-center justify-between text-sm font-semibold text-blue-600">
+                    <span>Start registration</span>
+                    <span>&rarr;</span>
+                </div>
+            </a>
+        </main>
+
+        <section class="mt-8 rounded-[32px] bg-blue-50 p-8 text-slate-900 shadow-lg shadow-blue-200/70">
+            <p class="font-semibold uppercase tracking-[0.3em] text-blue-700">Quick note</p>
+            <p class="mt-4 text-base leading-7">Use Google login to speed up registration, then complete patient or doctor onboarding with the existing verification flow.</p>
+        </section>
     </div>
-    <p class="mt-6 text-sm text-slate-400">Or continue with Google (will ask for role on first login).</p>
-</div>
 </body>
 </html>

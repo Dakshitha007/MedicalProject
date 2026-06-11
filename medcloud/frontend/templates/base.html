@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CLINIK{% endblock %}</title>
+    <title>{% block title %}DiagoVault AI{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -11,68 +12,41 @@
             theme: {
                 extend: {
                     colors: {
-                        brandDark: '#161d31',
-                        brandBg: '#0f1424',
-                        brandBlue: '#2260ff',
-                        cardBg: '#1e2640',
-                        textMuted: '#67748e'
+                        primary: '#2563EB',
+                        lightBlue: '#e6f2ff',
+                        brandText: '#0f172a'
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="{% static 'frontend/css/diago.css' %}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-brandBg text-white min-h-screen flex">
+<body class="bg-white text-slate-900 min-h-screen antialiased">
 
-    <aside class="w-64 bg-brandDark border-r border-slate-800 flex flex-col justify-between p-6 shrink-0 h-screen sticky top-0">
-        <div>
-            <div class="flex items-center gap-3 mb-10 px-2">
-                <div class="bg-brandBlue p-2 rounded-xl text-white shadow-lg shadow-blue-500/30">
-                    <i data-lucide="activity" class="w-6 h-6"></i>
+    <header class="w-full border-b bg-white">
+        <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3">
+                <div class="h-10 w-10 flex items-center justify-center rounded-lg bg-primary text-white shadow-sm">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
                 </div>
-                <span class="text-xl font-bold tracking-wider">CLINIK</span>
-            </div>
-
-            <div class="space-y-6">
                 <div>
-                    <span class="text-xs font-semibold text-textMuted tracking-wider uppercase block mb-3 px-2">Main Menu</span>
-                    <nav class="space-y-1">
-                        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'dashboard' %}bg-brandBlue text-white{% else %}text-textMuted hover:text-white{% endif %} rounded-xl font-medium transition-all">
-                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-                        </a>
-                        <a href="{% url 'reports' %}" class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'reports' %}bg-brandBlue text-white{% else %}text-textMuted hover:text-white{% endif %} rounded-xl font-medium transition-all">
-                            <i data-lucide="file-text" class="w-5 h-5"></i> Medical Reports
-                        </a>
-                        <a href="{% url 'upload' %}" class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'upload' %}bg-brandBlue text-white{% else %}text-textMuted hover:text-white{% endif %} rounded-xl font-medium transition-all">
-                            <i data-lucide="cloud-upload" class="w-5 h-5"></i> Upload Records
-                        </a>
-                        <a href="#appointments-section" class="flex items-center gap-3 px-4 py-3 text-textMuted hover:text-white rounded-xl font-medium transition-all group">
-                            <i data-lucide="calendar" class="w-5 h-5"></i> Appointments
-                        </a>
-                    </nav>
+                    <div class="text-lg font-semibold">DiagoVault AI</div>
+                    <div class="text-xs text-slate-500">Intelligent Care, Secure Records</div>
                 </div>
-
-                <div>
-                    <span class="text-xs font-semibold text-textMuted tracking-wider uppercase block mb-3 px-2">Account</span>
-                    <nav class="space-y-1">
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-textMuted hover:text-white rounded-xl font-medium transition-all group">
-                            <i data-lucide="settings" class="w-5 h-5"></i> Settings
-                        </a>
-                    </nav>
-                </div>
-            </div>
+            </a>
+            <nav class="flex items-center gap-3">
+                <a href="/login/" class="text-sm font-medium text-slate-700">Login</a>
+                <a href="/register/" class="ml-3 inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow">Sign Up</a>
+            </nav>
         </div>
+    </header>
 
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 font-medium transition-all">
-            <i data-lucide="log-out" class="w-5 h-5"></i> Sign Out
-        </a>
-    </aside>
-
-    <main class="flex-1 p-8 overflow-y-auto h-screen">
+    <main class="flex-1 p-8">
         {% block content %}
         {% endblock %}
     </main>

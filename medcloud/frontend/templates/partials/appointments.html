@@ -10,8 +10,8 @@
         /* Smooth custom scaling, borders and glowing shadows on pointer hover */
         .premium-card-glow:hover {
             border-color: rgba(59, 130, 246, 0.4) !important;
-            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 4px 12px -2px rgba(37, 99, 235, 0.2);
-            background-color: rgba(30, 41, 59, 0.7) !important;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(37, 99, 235, 0.12);
+            background-color: rgba(59, 130, 246, 0.08) !important;
         }
         .title-transition {
             transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -30,78 +30,78 @@
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-[#0f172a] min-h-screen w-full font-sans antialiased relative overflow-x-hidden">
+<body class="bg-white min-h-screen w-full font-sans antialiased relative overflow-x-hidden">
 
     <main class="p-4 md:p-8 flex items-start justify-center">
-        <section class="bg-[#1e293b] rounded-3xl p-6 md:p-8 border border-slate-700/70 shadow-2xl w-full max-w-[1600px]">
+        <section class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm w-full max-w-[1600px]">
             
             <!-- Header Section -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div class="flex items-center gap-3">
                     <div class="w-1 h-6 bg-blue-500 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.6)]"></div>
                     <div>
-                        <h3 class="text-2xl font-bold text-white tracking-tight">Upcoming Appointments</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Manage and track your scheduled clinical sessions</p>
+                        <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Upcoming Appointments</h3>
+                        <p class="text-xs text-slate-600 mt-0.5">Manage and track your scheduled clinical sessions</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-3 self-end sm:self-auto">
-                    <button onclick="toggleModal('bookingModal', true)" class="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2.5 rounded-xl transition shadow-md">
+                    <button onclick="toggleModal('bookingModal', true)" class="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-4 py-2.5 rounded-xl transition shadow-sm">
                         <i data-lucide="plus" class="w-4 h-4 text-blue-400"></i> Book Appointment
                     </button>
-                    <button onclick="toggleDrawer(true)" class="text-blue-400 text-xs font-bold hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2.5 rounded-xl transition">
+                    <button onclick="toggleDrawer(true)" class="text-blue-600 text-xs font-bold hover:text-blue-700 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2.5 rounded-xl transition">
                         View All
                     </button>
                 </div>
             </div>
 
             <!-- Interactive Filter Tabs -->
-            <div class="flex items-center gap-2 border-b border-slate-700/60 pb-4 mb-6 overflow-x-auto scrollbar-none" id="tabContainer">
+            <div class="flex items-center gap-2 border-b border-slate-200 pb-4 mb-6 overflow-x-auto scrollbar-none" id="tabContainer">
                 <button onclick="filterAppointments('all', this)" class="tab-btn text-xs font-bold px-4 py-2 bg-blue-600 text-white rounded-lg transition shadow-md shadow-blue-600/10">All Appts (3)</button>
-                <button onclick="filterAppointments('scheduled', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg transition">Scheduled</button>
-                <button onclick="filterAppointments('in-progress', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg transition">In Progress</button>
-                <button onclick="filterAppointments('past-visits', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg transition">Past Visits</button>
+                <button onclick="filterAppointments('scheduled', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition">Scheduled</button>
+                <button onclick="filterAppointments('in-progress', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition">In Progress</button>
+                <button onclick="filterAppointments('past-visits', this)" class="tab-btn text-xs font-semibold px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition">Past Visits</button>
             </div>
             
             <!-- Appointment List Container -->
             <div class="space-y-4">
-                <div id="appointmentsMessage" class="text-sm text-slate-300"></div>
-                <div class="overflow-x-auto bg-slate-950/50 rounded-3xl border border-slate-700/60 shadow-inner">
-                    <table class="min-w-full divide-y divide-slate-700">
-                        <thead class="bg-slate-900/80">
+                <div id="appointmentsMessage" class="text-sm text-slate-600"></div>
+                <div class="overflow-x-auto bg-slate-50 rounded-3xl border border-slate-200 shadow-sm">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-100">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Patient</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Doctor</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Scheduled</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Reason</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Status</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400">Actions</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Patient</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Doctor</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Scheduled</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Reason</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="appointmentsTableBody" class="bg-slate-950/60">
+                        <tbody id="appointmentsTableBody" class="bg-white">
                             <tr>
                                 <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">Loading appointments...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="emptyState" class="hidden text-center py-12 bg-slate-800/10 rounded-2xl border border-dashed border-slate-700/40">
+                <div id="emptyState" class="hidden text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                     <i data-lucide="calendar-x" class="w-10 h-10 text-slate-500 mx-auto mb-3"></i>
-                    <p class="text-sm text-slate-400 font-medium">No appointments found. Use the button above to add a new appointment.</p>
+                    <p class="text-sm text-slate-500 font-medium">No appointments found. Use the button above to add a new appointment.</p>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- BOOK APPOINTMENT MODAL -->
-    <div id="bookingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-        <div class="bg-[#1e293b] border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden" id="modalContainer">
-            <div class="flex items-center justify-between p-5 border-b border-slate-700/60 bg-slate-800/40">
+    <div id="bookingModal" class="fixed inset-0 bg-slate-200/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+        <div class="bg-white border border-slate-200 w-full max-w-lg rounded-2xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden" id="modalContainer">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50">
                 <div class="flex items-center gap-2.5">
                     <i data-lucide="calendar-plus" class="w-5 h-5 text-blue-400"></i>
-                    <h3 id="modalTitle" class="text-lg font-bold text-white">Add Appointment</h3>
+                    <h3 id="modalTitle" class="text-lg font-bold text-slate-900">Add Appointment</h3>
                 </div>
-                <button onclick="toggleModal('bookingModal', false)" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700 transition">
+                <button onclick="toggleModal('bookingModal', false)" class="text-slate-600 hover:text-slate-900 p-1 rounded-lg hover:bg-slate-100 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -109,33 +109,33 @@
             <form id="appointmentForm" onsubmit="handleFormSubmit(event)" class="p-5 space-y-4">
                 <input type="hidden" id="appointmentIdInput" />
                 <div id="patientField" class="hidden">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Patient ID</label>
-                    <input id="patientIdInput" type="text" placeholder="Enter patient ID" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Patient ID</label>
+                    <input id="patientIdInput" type="text" placeholder="Enter patient ID" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition" />
                 </div>
                 <div id="doctorField" class="hidden">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Doctor Profile ID</label>
-                    <input id="doctorIdInput" type="text" placeholder="Enter doctor profile ID" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Doctor Profile ID</label>
+                    <input id="doctorIdInput" type="text" placeholder="Enter doctor profile ID" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition" />
                 </div>
                 <div id="doctorSelectField" class="hidden">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Doctor</label>
-                    <select id="doctorSelect" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Doctor</label>
+                    <select id="doctorSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition">
                         <option value="">Choose a verified doctor...</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Date and time</label>
-                    <input id="scheduledAtInput" type="datetime-local" required class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Date and time</label>
+                    <input id="scheduledAtInput" type="datetime-local" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition" />
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Reason for appointment</label>
-                    <textarea id="reasonInput" rows="4" placeholder="Describe the reason for your visit" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Reason for appointment</label>
+                    <textarea id="reasonInput" rows="4" placeholder="Describe the reason for your visit" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Status</label>
-                    <select id="statusInput" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Status</label>
+                    <select id="statusInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition">
                         <option value="scheduled">Scheduled</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
@@ -143,8 +143,8 @@
                 </div>
 
                 <div id="formError" class="text-sm text-rose-400"></div>
-                <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-700/40">
-                    <button type="button" onclick="toggleModal('bookingModal', false)" class="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition">Cancel</button>
+                <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-200">
+                    <button type="button" onclick="toggleModal('bookingModal', false)" class="px-4 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition">Cancel</button>
                     <button type="submit" id="submitAppointmentButton" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-blue-600/10">Save Appointment</button>
                 </div>
             </form>
@@ -152,62 +152,62 @@
     </div>
 
     <!-- VIEW ALL SIDE-DRAWER PANEL -->
-    <div id="viewAllDrawer" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    <div id="viewAllDrawer" class="fixed inset-0 bg-slate-200/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50">
         <div onclick="toggleDrawer(false)" class="absolute inset-0"></div>
-        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[#1e293b] border-l border-slate-700 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col" id="drawerContainer">
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white border-l border-slate-200 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col" id="drawerContainer">
             
-            <div class="flex items-center justify-between p-5 border-b border-slate-700/60 bg-slate-800/40">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50">
                 <div class="flex items-center gap-2.5">
                     <i data-lucide="layers" class="w-5 h-5 text-blue-400"></i>
-                    <h3 class="text-lg font-bold text-white">All Appointment Records</h3>
+                    <h3 class="text-lg font-bold text-slate-900">All Appointment Records</h3>
                 </div>
-                <button onclick="toggleDrawer(false)" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700 transition">
+                <button onclick="toggleDrawer(false)" class="text-slate-600 hover:text-slate-900 p-1 rounded-lg hover:bg-slate-100 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
             <!-- Scrollable Master Content -->
             <div class="p-5 overflow-y-auto flex-1 space-y-4 scrollbar-none">
-                <p class="text-xs font-medium text-slate-400 mb-2">A holistic timeline view of current, historical, and scheduled checkups.</p>
+                <p class="text-xs font-medium text-slate-600 mb-2">A holistic timeline view of current, historical, and scheduled checkups.</p>
                 
                 <!-- Drawer Item 1 -->
-                <div class="p-4 bg-[#0f172a]/60 rounded-xl border border-slate-700/60 space-y-2">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex justify-between items-start">
                         <span class="text-xs font-extrabold text-blue-400 uppercase tracking-wide">Dental Department</span>
                         <span class="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-[9px] font-bold rounded border border-blue-500/20">May 20, 2026</span>
                     </div>
-                    <h5 class="text-sm font-bold text-white">Dr. Oksana Mahatova</h5>
-                    <p class="text-xs text-slate-400">Treatment and cleaning of canals</p>
+                    <h5 class="text-sm font-bold text-slate-900">Dr. Oksana Mahatova</h5>
+                    <p class="text-xs text-slate-600">Treatment and cleaning of canals</p>
                 </div>
 
                 <!-- Drawer Item 2 -->
-                <div class="p-4 bg-[#0f172a]/60 rounded-xl border border-slate-700/60 space-y-2">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex justify-between items-start">
                         <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wide">Cardiology Clinic</span>
                         <span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-[9px] font-bold rounded border border-amber-500/20">May 20, 2026</span>
                     </div>
-                    <h5 class="text-sm font-bold text-white">Dr. Alexander Wright</h5>
-                    <p class="text-xs text-slate-400">Cardiovascular Routine Follow-up Check</p>
+                    <h5 class="text-sm font-bold text-slate-900">Dr. Alexander Wright</h5>
+                    <p class="text-xs text-slate-600">Cardiovascular Routine Follow-up Check</p>
                 </div>
 
                 <!-- Drawer Item 3 -->
-                <div class="p-4 bg-[#0f172a]/60 rounded-xl border border-slate-700/60 space-y-2">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex justify-between items-start">
                         <span class="text-xs font-extrabold text-emerald-400 uppercase tracking-wide">Therapeutics & Rehab</span>
                         <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[9px] font-bold rounded border border-emerald-500/20">May 18, 2026</span>
                     </div>
-                    <h5 class="text-sm font-bold text-white">Dr. Sarah Jenkins</h5>
-                    <p class="text-xs text-slate-400">Dermatology Consult & Allergy Screening</p>
+                    <h5 class="text-sm font-bold text-slate-900">Dr. Sarah Jenkins</h5>
+                    <p class="text-xs text-slate-600">Dermatology Consult & Allergy Screening</p>
                 </div>
 
                 <!-- Historical Mock Archive Entry -->
-                <div class="p-4 bg-[#0f172a]/30 rounded-xl border border-slate-800/80 opacity-60 space-y-2">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex justify-between items-start">
-                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wide">Neurology Dept</span>
-                        <span class="px-2 py-0.5 bg-slate-500/10 text-slate-400 text-[9px] font-bold rounded border border-slate-700/40">Apr 12, 2026</span>
+                        <span class="text-xs font-extrabold text-slate-600 uppercase tracking-wide">Neurology Dept</span>
+                        <span class="px-2 py-0.5 bg-slate-500/10 text-slate-600 text-[9px] font-bold rounded border border-slate-200">Apr 12, 2026</span>
                     </div>
-                    <h5 class="text-sm font-bold text-slate-300">Dr. Melissa Vance</h5>
-                    <p class="text-xs text-slate-500">EEG Brain mapping interpretation</p>
+                    <h5 class="text-sm font-bold text-slate-900">Dr. Melissa Vance</h5>
+                    <p class="text-xs text-slate-600">EEG Brain mapping interpretation</p>
                 </div>
             </div>
         </div>
@@ -356,12 +356,12 @@
             emptyState.classList.add('hidden');
             appointments.forEach(item => {
                 const row = document.createElement('tr');
-                row.className = 'border-b border-slate-800/80 hover:bg-slate-900/50';
+                row.className = 'border-b border-slate-200 hover:bg-slate-50';
                 row.innerHTML = `
-                    <td class="px-4 py-4 text-sm text-slate-200">${item.patient?.patient_id || '-'}<div class="text-xs text-slate-500 mt-1">${item.patient?.full_name || 'Unknown patient'}</div></td>
-                    <td class="px-4 py-4 text-sm text-slate-200">${item.doctor?.full_name || '-'}<div class="text-xs text-slate-500 mt-1">${item.doctor?.specialization || item.doctor?.hospital_name || ''}</div></td>
-                    <td class="px-4 py-4 text-sm text-slate-200">${formatDateTime(item.scheduled_at)}</td>
-                    <td class="px-4 py-4 text-sm text-slate-200">${item.reason || 'No reason provided'}</td>
+                    <td class="px-4 py-4 text-sm text-slate-900">${item.patient?.patient_id || '-'}<div class="text-xs text-slate-500 mt-1">${item.patient?.full_name || 'Unknown patient'}</div></td>
+                    <td class="px-4 py-4 text-sm text-slate-900">${item.doctor?.full_name || '-'}<div class="text-xs text-slate-500 mt-1">${item.doctor?.specialization || item.doctor?.hospital_name || ''}</div></td>
+                    <td class="px-4 py-4 text-sm text-slate-600">${formatDateTime(item.scheduled_at)}</td>
+                    <td class="px-4 py-4 text-sm text-slate-600">${item.reason || 'No reason provided'}</td>
                     <td class="px-4 py-4 text-sm font-semibold ${statusClass(item.status)}">${item.status}</td>
                     <td class="px-4 py-4 text-center">
                         <button type="button" onclick="openEditModal(${item.id})" class="mr-2 px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold">Edit</button>

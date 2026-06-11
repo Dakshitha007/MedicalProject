@@ -1,27 +1,32 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Verify OTP - CLINIK</title>
+    <title>Verify OTP - DiagoVault AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-6 text-slate-200">
-<div class="max-w-xl w-full bg-slate-950/90 border border-slate-800 rounded-2xl p-8">
-    <h1 class="text-2xl font-bold mb-4">Verify OTP</h1>
-    <p class="text-slate-400 mb-4">Enter the OTP sent to your email or phone.</p>
-    <p id="patientIdInfo" class="text-slate-300 mb-4"></p>
-    <form id="otpForm" class="space-y-4">
-        <input name="email" type="email" placeholder="Email used during registration" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <input name="code" placeholder="OTP code" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <div class="flex gap-3">
-            <button type="submit" class="flex-1 py-3 rounded bg-gradient-to-r from-blue-500 to-cyan-500">Verify OTP</button>
-            <button type="button" id="resendBtn" class="px-4 py-3 rounded bg-slate-700/80">Resend OTP</button>
+<body class="bg-slate-50 min-h-screen text-slate-900">
+    <div class="mx-auto flex min-h-screen items-center justify-center px-6 py-12">
+        <div class="w-full max-w-xl rounded-[32px] bg-white p-10 shadow-xl shadow-slate-200/70">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-[0.3em] text-blue-600">Verify OTP</p>
+                <h1 class="mt-3 text-3xl font-semibold text-slate-950">Confirm your patient registration</h1>
+                <p class="mt-3 text-slate-600">Enter the one-time code sent to your email.</p>
+            </div>
+            <p id="patientIdInfo" class="mb-6 text-sm text-slate-500"></p>
+            <form id="otpForm" class="space-y-4">
+                <input name="email" type="email" placeholder="Email used during registration" required class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                <input name="code" placeholder="OTP code" required class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 rounded-3xl bg-blue-600 py-3 text-white transition hover:bg-blue-700">Verify OTP</button>
+                    <button type="button" id="resendBtn" class="rounded-3xl border border-slate-200 bg-white py-3 text-slate-700 transition hover:bg-slate-50">Resend</button>
+                </div>
+            </form>
+            <div id="message" class="mt-4 text-sm text-slate-600"></div>
         </div>
-    </form>
-    <div id="message" class="mt-4 text-sm text-amber-300"></div>
-</div>
-<script>
+    </div>
+    <script>
 const API = '/api/auth';
 const form = document.getElementById('otpForm');
 const message = document.getElementById('message');
@@ -41,7 +46,6 @@ form.addEventListener('submit', async (e)=>{
                 successMessage += ' Your patient ID is ' + json.patient_id + '.';
             }
             message.innerText = successMessage;
-            // redirect to password set
             setTimeout(()=> window.location.href = '/register/password/?email=' + encodeURIComponent(data.email), 900);
         } else {
             message.innerText = json.detail || JSON.stringify(json);
@@ -61,9 +65,7 @@ if (resendBtn) {
             const res = await fetch(API + '/resend-otp/', { method: 'POST', headers: {'Content-Type':'application/json','X-CSRFToken': getCookie('csrftoken')}, body: JSON.stringify({email: email, purpose: 'registration'}) });
             const json = await res.json();
             message.innerText = json.detail || 'OTP resent.';
-            if (res.ok && json.debug_otp) {
-                console.log('DEBUG OTP:', json.debug_otp);
-            }
+            if (res.ok && json.debug_otp) { console.log('DEBUG OTP:', json.debug_otp); }
         } catch (err) {
             message.innerText = 'Unable to resend OTP.';
         }
@@ -77,16 +79,13 @@ function fillEmailFromQuery() {
     const patientId = params.get('patient_id');
     if (email) {
         const emailField = document.querySelector('input[name="email"]');
-        if (emailField) {
-            emailField.value = email;
-        }
+        if (emailField) { emailField.value = email; }
     }
     if (patientId) {
         const patientInfo = document.getElementById('patientIdInfo');
-        if (patientInfo) {
-            patientInfo.innerText = 'Your patient ID is ' + patientId + '.';
-        }
+        if (patientInfo) { patientInfo.innerText = 'Your patient ID is ' + patientId + '.'; }
     }
-}</script>
+}
+    </script>
 </body>
 </html>

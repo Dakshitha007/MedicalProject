@@ -8,6 +8,11 @@ from django.urls import reverse
 from django.middleware.csrf import get_token
 from authentication.models import User
 
+def landing_view(request):
+    """Render landing page"""
+    return render(request, 'landing.html')
+
+
 def login_view(request):
     """Render login page"""
     get_token(request)  # Generate CSRF token for frontend

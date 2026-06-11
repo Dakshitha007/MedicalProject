@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCloud | Confirm your role</title>
+    <title>DiagoVault AI | Confirm your role</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'frontend/css/auth-brand.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/css/diago.css' %}">
 </head>
-<body class="auth-shell bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-slate-100">
+<body class="bg-white text-slate-900">
     <div class="auth-container">
         <div class="auth-card glass-panel max-w-4xl overflow-hidden">
             <div class="auth-header p-8 lg:p-10">
-                <div class="brand-badge">
-                    <div class="brand-icon">M</div>
+                <div class="brand-badge header-brand">
+                    <div class="brand-icon logo">D</div>
                     <div>
-                        <p class="brand-label">MedCloud</p>
+                        <p class="brand-label">DiagoVault AI</p>
                         <p class="brand-tag">Role confirmation for Google sign-up</p>
                     </div>
                 </div>
@@ -26,21 +26,21 @@
                 </div>
             </div>
             <div class="auth-body p-8 lg:p-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-                <div class="glass-panel panel-info p-8">
-                    <h1 class="text-3xl font-semibold text-white">Confirm your Google access</h1>
-                    <p class="mt-4 text-slate-300 leading-7">This is your first sign-in with Google. Confirm your role and finish onboarding to unlock the doctor or patient dashboard immediately.</p>
+                <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+                    <h1 class="text-3xl font-semibold text-slate-900">Confirm your Google access</h1>
+                    <p class="mt-4 text-slate-600 leading-7">This is your first sign-in with Google. Confirm your role and finish onboarding to unlock the doctor or patient dashboard immediately.</p>
                     <div class="mt-8 grid gap-4">
-                        <div class="badge-row">
-                            <div class="auth-badge">Role persistency</div>
-                            <div class="auth-badge">HIPAA safe</div>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div class="rounded-full border border-slate-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">Role persistency</div>
+                            <div class="rounded-full border border-slate-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">HIPAA safe</div>
                         </div>
-                        <div class="badge-row">
-                            <div class="auth-badge">Google OAuth</div>
-                            <div class="auth-badge">Secure medical access</div>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div class="rounded-full border border-slate-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">Google OAuth</div>
+                            <div class="rounded-full border border-slate-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">Secure medical access</div>
                         </div>
                     </div>
                 </div>
-                <div class="glass-panel panel-cta p-8">
+                <div class="rounded-3xl bg-slate-50 border border-slate-200 p-8 shadow-sm">
                     <form method="post" action="" class="space-y-6">
                         {% csrf_token %}
                         {{ form.hidden_fields }}
@@ -51,8 +51,7 @@
                             <div>
                                 <p class="text-sm uppercase tracking-[0.3em] text-slate-500 mb-3">Selected role</p>
                                 {% if request.session.google_auth_role %}
-                                    <div class="role-pill active inline-flex items-center gap-2">
-                                        <span class="role-dot"></span>
+                                    <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
                                         {{ request.session.google_auth_role|title }}
                                     </div>
                                 {% else %}
@@ -62,9 +61,9 @@
                                 {% endif %}
                             </div>
                             {% if not request.session.google_auth_role %}
-                                <p class="text-sm text-slate-400">Select your primary role for this MedCloud account.</p>
+                                <p class="text-sm text-slate-500">Select your primary role for this DiagoVault AI account.</p>
                             {% else %}
-                                <p class="text-sm text-slate-400">We will save this role permanently for your account routing.</p>
+                                <p class="text-sm text-slate-500">We will save this role permanently for your account routing.</p>
                             {% endif %}
                             <div class="form-group">
                                 <label for="id_username">Username</label>
@@ -81,12 +80,12 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn-primary w-full">Complete Google onboarding</button>
+                        <button type="submit" class="w-full rounded-3xl bg-blue-600 py-4 text-white font-semibold shadow-lg shadow-blue-500/20 transition hover:bg-blue-700">Complete Google onboarding</button>
                     </form>
                 </div>
             </div>
-            <div class="panel-footer p-6 border-t border-white/10 bg-slate-950/70">
-                <p class="text-sm text-slate-400">After approval, you will be routed to the appropriate dashboard for your role.</p>
+            <div class="panel-footer p-6 border-t border-slate-200 bg-slate-50">
+                <p class="text-sm text-slate-600">After approval, you will be routed to the appropriate dashboard for your role.</p>
             </div>
         </div>
     </div>

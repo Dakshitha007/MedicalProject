@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCloud | Secure Login</title>
+    <title>DiagoVault AI | Secure Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'frontend/css/auth-brand.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/css/diago.css' %}">
 </head>
-<body class="auth-shell bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-slate-100">
+<body class="bg-white text-slate-900">
     <div class="auth-container">
         <div class="auth-card glass-panel overflow-hidden">
             <div class="auth-hero relative p-8 lg:p-10">
-                <div class="brand-badge">
-                    <div class="brand-icon">M</div>
+                <div class="brand-badge header-brand">
+                    <div class="brand-icon logo">D</div>
                     <div>
-                        <p class="brand-label">MedCloud</p>
+                        <p class="brand-label">DiagoVault AI</p>
                         <p class="brand-tag">Healthcare Identity Platform</p>
                     </div>
                 </div>
@@ -25,16 +25,16 @@
                 </div>
                 <div class="py-8">
                     <p class="eyebrow">Enterprise-grade healthcare access</p>
-                    <h1 class="auth-title">Secure sign in to your MedCloud workspace</h1>
+                    <h1 class="auth-title">Secure sign in to your DiagoVault AI workspace</h1>
                     <p class="auth-copy">Fast, compliant authentication for doctors and patients with HIPAA-grade safeguards and seamless Google SSO.</p>
                 </div>
             </div>
             <div class="auth-body p-8 lg:p-10">
                 <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
                     <div class="space-y-6">
-                        <div class="panel-block glass-panel p-6">
+                        <div class="panel-block glass-panel p-6 bg-white border border-slate-200 shadow-sm">
                             <h2 class="panel-title">Sign in with email</h2>
-                            <p class="panel-copy">Use your MedCloud credentials for full portal access.</p>
+                            <p class="panel-copy">Use your DiagoVault AI credentials for full portal access.</p>
                             <form method="post" action="" class="space-y-6" novalidate>
                                 {% csrf_token %}
                                 {{ form.hidden_fields }}
@@ -50,7 +50,7 @@
                                     {{ form.password }}
                                 </div>
                                 {% if form.remember %}
-                                    <div class="flex items-center gap-2 text-sm text-slate-300">
+                                    <div class="flex items-center gap-2 text-sm text-slate-600">
                                         {{ form.remember }}
                                         <label for="id_remember">Remember me</label>
                                     </div>
@@ -58,7 +58,7 @@
                                 <button type="submit" class="btn-primary w-full">Sign in securely</button>
                             </form>
                         </div>
-                        <div class="panel-block glass-panel p-6 border-slate-800/70">
+                        <div class="panel-block glass-panel p-6 bg-slate-50 border border-slate-200 shadow-sm">
                             <div class="flex items-center justify-between gap-3">
                                 <div>
                                     <p class="panel-title">Continue with Google</p>
@@ -74,7 +74,7 @@
                                 <span class="google-icon" aria-hidden="true">G</span>
                                 Continue with Google
                             </button>
-                            <p class="mt-5 text-sm text-slate-400">By continuing, you agree to MedCloud’s privacy and HIPAA-compliant authentication workflows.</p>
+                            <p class="mt-5 text-sm text-slate-500">By continuing, you agree to DiagoVault AI’s privacy and HIPAA-compliant authentication workflows.</p>
                         </div>
                     </div>
                     <div class="panel-card glass-panel p-6">

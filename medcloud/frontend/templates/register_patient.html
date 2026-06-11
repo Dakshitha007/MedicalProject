@@ -1,33 +1,46 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Patient Registration - CLINIK</title>
+    <title>Patient Registration - DiagoVault AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-6 text-slate-200">
-<div class="max-w-3xl w-full bg-slate-950/90 border border-slate-800 rounded-2xl p-8">
-    <h1 class="text-2xl font-bold mb-4">Patient Registration</h1>
-    <form id="patientForm" class="space-y-4">
-        <input name="full_name" placeholder="Full name" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <div class="grid grid-cols-3 gap-3">
-            <input name="age" type="number" placeholder="Age" required class="p-3 rounded bg-slate-900/70 border border-slate-700" />
-            <select name="gender" required class="p-3 rounded bg-slate-900/70 border border-slate-700">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
-            <input name="phone_number" placeholder="Phone" required class="p-3 rounded bg-slate-900/70 border border-slate-700" />
+<body class="bg-slate-50 min-h-screen text-slate-900">
+    <div class="mx-auto flex min-h-screen items-center justify-center px-6 py-12">
+        <div class="w-full max-w-3xl rounded-[32px] bg-white p-10 shadow-xl shadow-slate-200/70">
+            <div class="mb-8 flex items-center justify-between gap-4">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-blue-600">Patient registration</p>
+                    <h1 class="mt-3 text-3xl font-semibold text-slate-950">Create your DiagoVault AI account</h1>
+                </div>
+                <a href="/register/" class="text-sm font-semibold text-blue-600 hover:text-blue-800">Choose another path</a>
+            </div>
+            <form id="patientForm" class="space-y-5">
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <input name="full_name" placeholder="Full name" required class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                    <input name="email" type="email" placeholder="Email" required class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                </div>
+                <div class="grid gap-4 sm:grid-cols-3">
+                    <input name="age" type="number" placeholder="Age" required class="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                    <select name="gender" required class="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200">
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input name="phone_number" placeholder="Phone" required class="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <input name="address" placeholder="Address" class="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                    <input name="emergency_contact" placeholder="Emergency contact" class="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200" />
+                </div>
+                <button type="submit" class="w-full rounded-3xl bg-blue-600 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700">Start Registration</button>
+            </form>
+            <p id="message" class="mt-4 text-sm text-slate-600"></p>
         </div>
-        <input name="email" type="email" placeholder="Email" required class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <input name="address" placeholder="Address" class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <input name="emergency_contact" placeholder="Emergency contact" class="w-full p-3 rounded bg-slate-900/70 border border-slate-700" />
-        <button type="submit" class="w-full py-3 rounded bg-gradient-to-r from-blue-500 to-cyan-500">Start Registration</button>
-    </form>
-    <div id="message" class="mt-4 text-sm text-emerald-300"></div>
-</div>
-<script>
+    </div>
+    <script>
 const API = '/api/auth';
 const form = document.getElementById('patientForm');
 const message = document.getElementById('message');
@@ -60,6 +73,6 @@ form.addEventListener('submit', async (e)=>{
     }
 });
 function getCookie(name) {let cookieValue = null; if (document.cookie && document.cookie !== '') {const cookies = document.cookie.split(';'); for (let i = 0; i < cookies.length; i++) {const cookie = cookies[i].trim(); if (cookie.substring(0, name.length + 1) === (name + '=')) {cookieValue = decodeURIComponent(cookie.substring(name.length + 1)); break;}}} return cookieValue;}
-</script>
+    </script>
 </body>
 </html>
