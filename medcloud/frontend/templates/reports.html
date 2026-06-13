@@ -15,21 +15,27 @@
                 <h1 class="text-3xl font-bold text-white">Medical Reports</h1>
                 <p class="text-slate-400">Access and manage your cloud-stored health records</p>
             </div>
-            <a href="dashboard.html" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition">
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition">
                 <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Dashboard
             </a>
         </div>
 
-        <div class="flex gap-4 mb-6">
+        <form method="get" class="flex gap-4 mb-6">
             <div class="relative flex-1">
                 <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"></i>
-                <input type="text" placeholder="Search reports by name or date..." 
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search reports by name or date..." 
                        class="w-full bg-[#1e293b] border border-slate-700 rounded-xl py-3 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500">
             </div>
-            <button class="bg-[#1e293b] border border-slate-700 px-4 rounded-xl flex items-center gap-2 hover:bg-slate-700">
+            <select name="category" class="bg-[#1e293b] border border-slate-700 px-4 rounded-xl">
+                <option value="">All Categories</option>
+                <option value="lab">Laboratory</option>
+                <option value="cardio">Cardiology</option>
+                <option value="immun">Immunization</option>
+            </select>
+            <button type="submit" class="bg-[#1e293b] border border-slate-700 px-4 rounded-xl flex items-center gap-2 hover:bg-slate-700">
                 <i data-lucide="filter" class="w-4 h-4"></i> Filter
             </button>
-        </div>
+        </form>
 
         <div class="bg-[#1e293b] rounded-2xl border border-slate-700 overflow-hidden">
             <table class="w-full text-left">
@@ -42,51 +48,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-700">
+                    {% for r in reports %}
                     <tr class="hover:bg-slate-800/40 transition">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400">
                                     <i data-lucide="file-text"></i>
                                 </div>
-                                <span class="font-medium text-white">Annual Blood Checkup</span>
+                                <a href="{% url 'report_detail' r.pk %}" class="font-medium text-white hover:underline">{{ r.report_name }}</a>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-400">Laboratory</td>
-                        <td class="px-6 py-4 text-slate-400">May 12, 2026</td>
+                        <td class="px-6 py-4 text-slate-400">{{ r.get_category_display }}</td>
+                        <td class="px-6 py-4 text-slate-400">{{ r.upload_date|date:"M d, Y" }}</td>
                         <td class="px-6 py-4 text-right">
-                            <button class="text-blue-400 hover:underline font-medium">View PDF</button>
+                            <a href="{{ r.uploaded_file.url }}" class="text-blue-400 hover:underline font-medium" download>Download</a>
                         </td>
                     </tr>
-                    <tr class="hover:bg-slate-800/40 transition">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400">
-                                    <i data-lucide="activity"></i>
-                                </div>
-                                <span class="font-medium text-white">Cardiogram Results</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-slate-400">Cardiology</td>
-                        <td class="px-6 py-4 text-slate-400">April 20, 2026</td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="text-blue-400 hover:underline font-medium">View PDF</button>
-                        </td>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-slate-500">No reports found.</td>
                     </tr>
-                    <tr class="hover:bg-slate-800/40 transition">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-green-500/10 rounded-lg text-green-400">
-                                    <i data-lucide="shield-plus"></i>
-                                </div>
-                                <span class="font-medium text-white">COVID-19 Vaccination</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-slate-400">Immunization</td>
-                        <td class="px-6 py-4 text-slate-400">Jan 15, 2026</td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="text-blue-400 hover:underline font-medium">View PDF</button>
-                        </td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

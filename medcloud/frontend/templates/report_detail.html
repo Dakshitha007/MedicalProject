@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ report.report_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] text-slate-200 p-8">
+    <div class="max-w-4xl mx-auto bg-[#1e293b] p-6 rounded-2xl">
+        <h1 class="text-2xl font-bold">{{ report.report_name }}</h1>
+        <p class="text-sm text-slate-400">Category: {{ report.get_category_display }} | Uploaded: {{ report.upload_date }}</p>
+        <div class="mt-4">
+            <a href="{{ report.uploaded_file.url }}" class="bg-blue-600 px-4 py-2 rounded text-white" download>Download PDF</a>
+            <form method="post" action="{% url 'report_delete' report.pk %}" style="display:inline">{% csrf_token %}
+                <button type="submit" class="ml-2 bg-red-600 px-3 py-2 rounded">Delete</button>
+            </form>
+        </div>
+        <section class="mt-6">
+            <h3 class="font-bold">AI Summary</h3>
+            <p class="text-slate-300">{{ report.ai_summary|default:'No summary available.' }}</p>
+        </section>
+        <section class="mt-4">
+            <h3 class="font-bold">Doctor Notes</h3>
+            <p class="text-slate-300">{{ report.doctor_notes|default:'No notes.' }}</p>
+        </section>
+    </div>
+</body>
+</html>

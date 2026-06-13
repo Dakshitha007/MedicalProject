@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiagoVault AI | Secure Healthcare Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-slate-900">
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-20 flex items-center justify-between">
+                <a href="{% url 'landing' %}" class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
+                        <i data-lucide="plus-square" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-extrabold tracking-tight">DiagoVault AI</div>
+                        <div class="text-xs text-slate-500">Intelligent Care, Secure Records</div>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-2 text-sm font-medium">
+                    <a href="#features" class="px-4 py-2 text-slate-600 hover:text-blue-600 transition">Features</a>
+                    <a href="#benefits" class="px-4 py-2 text-slate-600 hover:text-blue-600 transition">Benefits</a>
+                    <a href="#footer" class="px-4 py-2 text-slate-600 hover:text-blue-600 transition">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'login' %}" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:border-blue-500 hover:text-blue-600 transition">Login</a>
+                    <a href="{% url 'register' %}" class="px-4 py-2 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700 transition">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-50"></div>
+            <div class="absolute -top-24 right-0 w-96 h-96 bg-blue-200/40 blur-3xl rounded-full"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-sky-100/70 blur-3xl rounded-full"></div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+                <div class="grid lg:grid-cols-2 gap-14 items-center">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-6">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i> AI-Powered Healthcare Platform
+                        </div>
+                        <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-950 leading-tight max-w-xl">
+                            Smart Diagnosis.<br>
+                            <span class="text-blue-600">Secure Records.</span><br>
+                            Better Healthcare.
+                        </h1>
+                        <p class="mt-6 text-lg text-slate-600 max-w-xl leading-8">
+                            DiagoVault AI combines secure cloud storage, intelligent medical workflows, and role-based access so doctors and patients can manage health records anytime, anywhere.
+                        </p>
+                        <div class="mt-8 flex flex-wrap gap-4">
+                            <a href="{% url 'register' %}" class="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg shadow-blue-200 hover:bg-blue-700 transition">Learn More</a>
+                            <a href="#features" class="px-6 py-3 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold hover:border-blue-500 hover:text-blue-600 transition">How It Works</a>
+                        </div>
+                        <div class="mt-10 grid sm:grid-cols-3 gap-4 text-sm text-slate-600">
+                            <div class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                                <i data-lucide="upload-cloud" class="w-5 h-5 text-blue-600"></i>
+                                Upload & Analyze
+                            </div>
+                            <div class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                                <i data-lucide="brain" class="w-5 h-5 text-blue-600"></i>
+                                AI-Powered Insights
+                            </div>
+                            <div class="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+                                Secure Cloud Records
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute -top-6 -left-6 w-24 h-24 rounded-3xl bg-blue-100"></div>
+                        <div class="relative bg-white rounded-[2rem] border border-slate-200 shadow-2xl p-5 sm:p-7">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-sm text-slate-500">Dashboard Preview</div>
+                                    <div class="text-xl font-bold text-slate-900">Doctor Workspace</div>
+                                </div>
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3 mb-4 text-center text-xs">
+                                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                                    <div class="font-bold text-slate-900 text-lg">120</div>
+                                    <div class="text-slate-500">Patients</div>
+                                </div>
+                                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                                    <div class="font-bold text-slate-900 text-lg">320</div>
+                                    <div class="text-slate-500">Scans</div>
+                                </div>
+                                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                                    <div class="font-bold text-slate-900 text-lg">92%</div>
+                                    <div class="text-slate-500">Accuracy</div>
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-[1.25fr_.75fr] gap-4 items-center">
+                                <div class="rounded-[1.75rem] bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200 p-4 min-h-[280px] flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="w-56 h-36 mx-auto rounded-[2rem] bg-white shadow-lg border border-slate-200 flex items-center justify-center">
+                                            <div class="text-slate-400">
+                                                <i data-lucide="monitor-smartphone" class="w-12 h-12 mx-auto mb-2 text-blue-600"></i>
+                                                Laptop Mockup
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-[1.75rem] bg-white border border-slate-200 p-4 min-h-[280px] flex items-center justify-center">
+                                    <div class="w-40 h-[250px] rounded-[2rem] bg-slate-950 border-[10px] border-slate-800 shadow-xl flex items-center justify-center text-center text-white">
+                                        <div>
+                                            <i data-lucide="smartphone" class="w-10 h-10 mx-auto mb-3 text-blue-400"></i>
+                                            Mobile Mockup
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">Everything You Need in One Platform</h2>
+                    <p class="mt-4 text-slate-600">Powerful features designed for doctors and patients.</p>
+                </div>
+                <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div class="p-6 rounded-3xl border border-slate-200 bg-slate-50 hover:shadow-lg hover:-translate-y-1 transition">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4"><i data-lucide="upload-cloud"></i></div>
+                        <h3 class="text-lg font-semibold mb-2">Upload & Analyze</h3>
+                        <p class="text-slate-600">Easily upload reports and prepare them for structured analysis.</p>
+                    </div>
+                    <div class="p-6 rounded-3xl border border-slate-200 bg-slate-50 hover:shadow-lg hover:-translate-y-1 transition">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4"><i data-lucide="brain"></i></div>
+                        <h3 class="text-lg font-semibold mb-2">AI-Powered Insights</h3>
+                        <p class="text-slate-600">Future-ready AI layers for summary, OCR, and scan interpretation.</p>
+                    </div>
+                    <div class="p-6 rounded-3xl border border-slate-200 bg-slate-50 hover:shadow-lg hover:-translate-y-1 transition">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4"><i data-lucide="shield-check"></i></div>
+                        <h3 class="text-lg font-semibold mb-2">Secure Cloud Records</h3>
+                        <p class="text-slate-600">Encrypted storage, verified downloads, and protected medical records.</p>
+                    </div>
+                    <div class="p-6 rounded-3xl border border-slate-200 bg-slate-50 hover:shadow-lg hover:-translate-y-1 transition">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4"><i data-lucide="users"></i></div>
+                        <h3 class="text-lg font-semibold mb-2">Role-Based Access</h3>
+                        <p class="text-slate-600">Separate experiences for patients, doctors, and administrators.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="benefits" class="py-20 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-3">For Doctors</h3>
+                        <p class="text-slate-600 leading-7">Review records, manage appointments, and prepare for AI-assisted diagnosis workflows.</p>
+                    </div>
+                    <div class="p-8 rounded-3xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+                        <h3 class="text-2xl font-bold mb-3">For Patients</h3>
+                        <p class="text-blue-50 leading-7">Store reports, view summaries, track medications, and access healthcare data securely from anywhere.</p>
+                    </div>
+                    <div class="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-3">Better Healthcare</h3>
+                        <p class="text-slate-600 leading-7">Connect care teams and patients with a clean, secure, and scalable digital health platform.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" class="border-t border-slate-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
+            <p class="text-slate-500">© 2026 DiagoVault AI. All rights reserved.</p>
+            <div class="flex flex-wrap gap-6 text-sm text-slate-600">
+                <a href="#" class="hover:text-blue-600">About</a>
+                <a href="#" class="hover:text-blue-600">Contact</a>
+                <a href="#" class="hover:text-blue-600">Privacy Policy</a>
+                <a href="#" class="hover:text-blue-600">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
