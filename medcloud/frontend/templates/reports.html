@@ -1,83 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Reports | CLINIK</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body class="bg-[#0f172a] text-slate-200 min-h-screen p-8">
+{% extends 'base.html' %}
 
-    <div class="max-w-5xl mx-auto">
-        <div class="flex justify-between items-center mb-10">
-            <div>
-                <h1 class="text-3xl font-bold text-white">Medical Reports</h1>
-                <p class="text-slate-400">Access and manage your cloud-stored health records</p>
-            </div>
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Dashboard
-            </a>
+{% block title %}Medical Reports | DiagoVault AI{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-4xl font-bold text-slate-900">Medical Reports</h1>
+            <p class="text-slate-500 mt-2">Access and manage your cloud-stored health records</p>
         </div>
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Dashboard
+        </a>
+    </div>
 
-        <form method="get" class="flex gap-4 mb-6">
-            <div class="relative flex-1">
-                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"></i>
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-lg shadow-blue-100/50 p-6 mb-8">
+        <form method="get" class="flex gap-4 flex-wrap">
+            <div class="relative flex-1 min-w-64">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
                 <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search reports by name or date..." 
-                       class="w-full bg-[#1e293b] border border-slate-700 rounded-xl py-3 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full bg-slate-50 border border-slate-300 rounded-2xl py-3 pl-12 pr-4 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
             </div>
-            <select name="category" class="bg-[#1e293b] border border-slate-700 px-4 rounded-xl">
+            <select name="category" class="bg-slate-50 border border-slate-300 px-4 rounded-2xl text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
                 <option value="">All Categories</option>
                 <option value="lab">Laboratory</option>
                 <option value="cardio">Cardiology</option>
                 <option value="immun">Immunization</option>
             </select>
-            <button type="submit" class="bg-[#1e293b] border border-slate-700 px-4 rounded-xl flex items-center gap-2 hover:bg-slate-700">
+            <button type="submit" class="bg-slate-100 border border-slate-300 px-6 rounded-2xl flex items-center gap-2 hover:bg-slate-200 text-slate-700 font-semibold transition">
                 <i data-lucide="filter" class="w-4 h-4"></i> Filter
             </button>
         </form>
-
-        <div class="bg-[#1e293b] rounded-2xl border border-slate-700 overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-slate-800/50 text-slate-400 text-sm uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4 font-semibold">Report Name</th>
-                        <th class="px-6 py-4 font-semibold">Category</th>
-                        <th class="px-6 py-4 font-semibold">Date</th>
-                        <th class="px-6 py-4 font-semibold text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-700">
-                    {% for r in reports %}
-                    <tr class="hover:bg-slate-800/40 transition">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                                    <i data-lucide="file-text"></i>
-                                </div>
-                                <a href="{% url 'report_detail' r.pk %}" class="font-medium text-white hover:underline">{{ r.report_name }}</a>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-slate-400">{{ r.get_category_display }}</td>
-                        <td class="px-6 py-4 text-slate-400">{{ r.upload_date|date:"M d, Y" }}</td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ r.uploaded_file.url }}" class="text-blue-400 hover:underline font-medium" download>Download</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-slate-500">No reports found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="mt-6 text-center text-slate-500 text-sm">
-            <p>All files are verified and digitally signed by CLINIK systems.</p>
-        </div>
     </div>
 
-    <script>lucide.createIcons();</script>
-</body>
-</html>
+    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-lg shadow-blue-100/50">
+        <table class="w-full text-left">
+            <thead class="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-slate-200">
+                <tr>
+                    <th class="px-6 py-4 font-bold text-slate-900">Report Name</th>
+                    <th class="px-6 py-4 font-bold text-slate-900">Category</th>
+                    <th class="px-6 py-4 font-bold text-slate-900">Date</th>
+                    <th class="px-6 py-4 font-bold text-slate-900 text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+                {% for r in reports %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <a href="{% url 'report_detail' r.pk %}" class="font-semibold text-slate-900 hover:text-blue-600 transition">{{ r.report_name }}</a>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">{{ r.get_category_display }}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">{{ r.upload_date|date:"M d, Y" }}</td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="{{ r.uploaded_file.url }}" class="text-blue-600 hover:text-blue-700 font-semibold transition" download>Download</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-slate-500 font-medium">No reports found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-6 text-center text-slate-500 text-sm">
+        <p>All files are verified and digitally signed by DiagoVault AI systems.</p>
+    </div>
+</div>
+{% endblock %}

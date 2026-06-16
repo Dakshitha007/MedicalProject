@@ -1,303 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Analyzer - System Settings</title>
-    <style>
-        :root {
-            --primary-color: #0284c7;
-            --primary-hover: #0369a1;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --danger-color: #ef4444;
-        }
+{% extends 'base.html' %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
+{% block title %}Settings | DiagoVault AI{% endblock %}
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-slate-900">System Settings</h1>
+        <p class="text-slate-500 mt-2">Configure your medical analysis parameters, integrations, and compliance constraints.</p>
+    </div>
 
-        header {
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-            color: #0f172a;
-        }
-
-        header p {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 30px;
-        }
-
-        /* Sidebar Navigation */
-        .settings-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .nav-item {
-            padding: 10px 15px;
-            text-decoration: none;
-            color: var(--text-color);
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 14px;
-            transition: background 0.2s;
-            cursor: pointer;
-            border: none;
-            text-align: left;
-            background: transparent;
-        }
-
-        .nav-item:hover {
-            background-color: #e2e8f0;
-        }
-
-        .nav-item.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Settings Panels */
-        .settings-panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        /* Tab Visibility Logic */
-        .settings-section {
-            display: none;
-        }
-        
-        .settings-section.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 18px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            color: #0f172a;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group p {
-            margin: 0 0 8px 0;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-        }
-
-        /* Toggle Switch Styling */
-        .switch-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
-        .switch-group:last-of-type {
-            border-bottom: none;
-        }
-
-        .switch-label-desc {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .switch-label-desc span {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .switch-label-desc small {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .switch input { 
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1;
-            transition: .3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        /* Action Footer */
-        .panel-footer {
-            margin-top: 30px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #f1f5f9;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>System Settings</h1>
-        <p>Configure your medical analysis parameters, integrations, and compliance constraints.</p>
-    </header>
-
-    <div class="settings-grid">
-        <nav class="settings-nav">
-            <button type="button" class="nav-item active" data-target="general">General & AI Engine</button>
-            <button type="button" class="nav-item" data-target="privacy">Privacy & Compliance</button>
-            <button type="button" class="nav-item" data-target="integrations">PACS / EHR Integrations</button>
-            <button type="button" class="nav-item" data-target="notifications">Alerts & Notifications</button>
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <nav class="lg:col-span-1 space-y-2">
+            <button type="button" class="nav-item active w-full text-left p-4 rounded-2xl bg-blue-600 text-white font-semibold transition" data-target="general">
+                General & AI Engine
+            </button>
+            <button type="button" class="nav-item w-full text-left p-4 rounded-2xl hover:bg-slate-100 text-slate-700 font-semibold transition" data-target="privacy">
+                Privacy & Compliance
+            </button>
+            <button type="button" class="nav-item w-full text-left p-4 rounded-2xl hover:bg-slate-100 text-slate-700 font-semibold transition" data-target="integrations">
+                PACS / EHR Integrations
+            </button>
+            <button type="button" class="nav-item w-full text-left p-4 rounded-2xl hover:bg-slate-100 text-slate-700 font-semibold transition" data-target="notifications">
+                Alerts & Notifications
+            </button>
         </nav>
 
-        <main class="settings-panel">
-            <form id="settingsForm">
-                
-                <section id="general" class="settings-section active">
-                    <h2 class="section-title">AI Engine & Analysis Thresholds</h2>
+        <div class="lg:col-span-3">
+            <form id="settingsForm" class="space-y-6">
+                <section id="general" class="settings-section active bg-white rounded-3xl border border-slate-200 p-8 shadow-lg shadow-blue-100/50">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-200">AI Engine & Analysis Thresholds</h2>
                     
-                    <div class="form-group">
-                        <label for="aiModel">Diagnostic AI Model Version</label>
-                        <p>Select the verified model architecture for scan evaluation.</p>
-                        <select id="aiModel" class="form-control">
+                    <div class="mb-6">
+                        <label for="aiModel" class="block text-sm font-semibold text-slate-700 mb-3">Diagnostic AI Model Version</label>
+                        <p class="text-slate-500 text-sm mb-3">Select the verified model architecture for scan evaluation.</p>
+                        <select id="aiModel" class="w-full bg-slate-50 border border-slate-300 rounded-2xl py-2.5 px-4 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
                             <option value="med-vision-v4.2">MedVision v4.2 (Production - Recommended)</option>
                             <option value="med-vision-v4.1">MedVision v4.1 (Legacy)</option>
                             <option value="med-vision-v5.0-beta">MedVision v5.0-Beta (Research Only)</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="confidenceThreshold">Anomaly Confidence Threshold (%)</label>
-                        <p>Minimum AI confidence score required to flag an anomaly for human review.</p>
-                        <input type="number" id="confidenceThreshold" class="form-control" min="50" max="100" value="85">
+                    <div>
+                        <label for="confidenceThreshold" class="block text-sm font-semibold text-slate-700 mb-3">Anomaly Confidence Threshold (%)</label>
+                        <p class="text-slate-500 text-sm mb-3">Minimum AI confidence score required to flag an anomaly for human review.</p>
+                        <input type="number" id="confidenceThreshold" class="w-full bg-slate-50 border border-slate-300 rounded-2xl py-2.5 px-4 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition" min="50" max="100" value="85">
                     </div>
                 </section>
 
-                <section id="privacy" class="settings-section">
-                    <h2 class="section-title">Privacy & Compliance</h2>
+                <section id="privacy" class="settings-section hidden bg-white rounded-3xl border border-slate-200 p-8 shadow-lg shadow-blue-100/50">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-200">Privacy & Compliance</h2>
                     
-                    <div class="switch-group">
-                        <div class="switch-label-desc">
-                            <span>Automatic DICOM Anonymization</span>
-                            <small>Strip Patient ID, Name, and DOB metadata locally prior to cloud-based processing.</small>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <div>
+                                <p class="font-semibold text-slate-900">Automatic DICOM Anonymization</p>
+                                <p class="text-sm text-slate-500">Strip Patient ID, Name, and DOB metadata locally prior to cloud-based processing.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="anonymizeData" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="anonymizeData" checked>
+                    </div>
+                </section>
+
+                <section id="integrations" class="settings-section hidden bg-white rounded-3xl border border-slate-200 p-8 shadow-lg shadow-blue-100/50">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-200">PACS / EHR Integrations</h2>
+                    <p class="text-slate-600 mb-6">Configure external medical system integrations for seamless data exchange.</p>
+                    <div class="text-center py-8 text-slate-500">
+                        <p>Integration settings coming soon</p>
+                    </div>
+                </section>
+
+                <section id="notifications" class="settings-section hidden bg-white rounded-3xl border border-slate-200 p-8 shadow-lg shadow-blue-100/50">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-200">Alerts & Notifications</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <div>
+                                <p class="font-semibold text-slate-900">Email Notifications</p>
+                                <p class="text-sm text-slate-500">Receive alerts for report processing and critical findings.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="emailNotif" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="flex justify-end gap-3 pt-6">
+                    <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-2xl font-semibold transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl font-semibold shadow-lg shadow-blue-200 transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.nav-item').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active', 'bg-blue-600', 'text-white'));
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.add('hidden'));
+            
+            button.classList.add('active', 'bg-blue-600', 'text-white');
+            document.getElementById(button.dataset.target).classList.remove('hidden');
+        });
+    });
+</script>
+{% endblock %}
                             <span class="slider"></span>
                         </label>
                     </div>

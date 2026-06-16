@@ -1,37 +1,77 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Register - CLINIK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | DiagoVault AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-[#0f172a] text-slate-200 p-8">
-    <div class="max-w-xl mx-auto bg-[#1e293b] p-8 rounded-2xl">
-        <h2 class="text-2xl font-bold mb-4">Create an account</h2>
-        <form method="post">{% csrf_token %}
-            {{ form.non_field_errors }}
-            <div class="mb-4">
-                {{ form.username.label_tag }}
+<body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="absolute top-20 left-20 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-slate-200 p-8 relative z-10">
+        <div class="mb-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-100 mb-4">
+                <i data-lucide="user-plus" class="w-8 h-8 text-blue-600"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-900">Create an account</h2>
+            <p class="text-slate-500 mt-2 font-medium">Join DiagoVault AI today</p>
+        </div>
+
+        <form method="post" class="space-y-5">{% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.username.label_tag }}</label>
                 {{ form.username }}
-                {{ form.username.errors }}
+                {% if form.username.errors %}<p class="text-red-600 text-xs mt-2 font-medium">{{ form.username.errors|striptags }}</p>{% endif %}
             </div>
-            <div class="mb-4">
-                {{ form.email.label_tag }}
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.email.label_tag }}</label>
                 {{ form.email }}
-                {{ form.email.errors }}
+                {% if form.email.errors %}<p class="text-red-600 text-xs mt-2 font-medium">{{ form.email.errors|striptags }}</p>{% endif %}
             </div>
-            <div class="mb-4">
-                {{ form.password1.label_tag }}
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.password1.label_tag }}</label>
                 {{ form.password1 }}
-                {{ form.password1.errors }}
+                {% if form.password1.errors %}<p class="text-red-600 text-xs mt-2 font-medium">{{ form.password1.errors|striptags }}</p>{% endif %}
             </div>
-            <div class="mb-4">
-                {{ form.password2.label_tag }}
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.password2.label_tag }}</label>
                 {{ form.password2 }}
-                {{ form.password2.errors }}
+                {% if form.password2.errors %}<p class="text-red-600 text-xs mt-2 font-medium">{{ form.password2.errors|striptags }}</p>{% endif %}
             </div>
-            <button type="submit" class="bg-blue-600 px-4 py-2 rounded">Register</button>
+
+            <style>
+                input[type="text"], input[type="email"], input[type="password"] {
+                    @apply w-full bg-white border border-slate-300 rounded-2xl py-3 px-4 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition;
+                }
+            </style>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-2xl shadow-lg shadow-blue-200 transition-all transform active:scale-95 duration-200">
+                Create Account
+            </button>
         </form>
+
+        <p class="text-center text-sm mt-8 text-slate-600">
+            Already have an account? <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-700 font-bold transition">Sign In</a>
+        </p>
     </div>
+
+    <script>lucide.createIcons();</script>
 </body>
 </html>

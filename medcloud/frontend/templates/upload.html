@@ -1,66 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body class="bg-[#0f172a] text-white p-10">
-    <div class="max-w-2xl mx-auto">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-            <i data-lucide="shield-check" class="text-green-400"></i> Secure Report Upload
-        </h2>
+{% extends 'base.html' %}
 
-        {% if messages %}
-            <div class="space-y-2">
-                {% for message in messages %}
-                    <div class="p-3 rounded-xl {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
+{% block title %}Upload Records | DiagoVault AI{% endblock %}
 
-        <form method="post" enctype="multipart/form-data" class="border-2 border-dashed border-slate-700 rounded-3xl p-12 text-center bg-[#1e293b] hover:border-blue-500 transition">
-            {% csrf_token %}
-            <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto text-slate-500 mb-4"></i>
-            <p class="text-lg">Drag and drop medical PDF or Images</p>
-            <p class="text-sm text-slate-500 mt-2">Files are encrypted with AES-256 before storage</p>
-            <div class="mt-4 grid grid-cols-1 gap-4">
-                <div>
-                    {{ form.report_name.label_tag }}
-                    {{ form.report_name }}
-                    {{ form.report_name.errors }}
-                </div>
-                <div>
-                    {{ form.category.label_tag }}
-                    {{ form.category }}
-                    {{ form.category.errors }}
-                </div>
-                <div>
-                    {{ form.uploaded_file.label_tag }}
-                    {{ form.uploaded_file }}
-                    {{ form.uploaded_file.errors }}
-                </div>
-            </div>
-            <div class="mt-6">
-                <button type="submit" class="bg-blue-600 px-6 py-2 rounded-full font-bold">Upload</button>
-            </div>
-        </form>
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-slate-900 flex items-center gap-3">Secure Report Upload</h1>
+        <p class="text-slate-500 mt-2">Upload medical records securely encrypted with AES-256</p>
+    </div>
 
-        <div class="mt-10 bg-[#1e293b] rounded-2xl p-6 border border-slate-700">
-            <h3 class="text-sm font-bold text-slate-400 uppercase mb-4">Recent Scanned Files</h3>
+    {% if messages %}
+        <div class="space-y-3 mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded-2xl {% if message.tags %}{{ message.tags }}{% else %}bg-green-50 border border-green-200 text-green-700{% endif %} font-medium">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="border-2 border-dashed border-slate-300 rounded-3xl p-12 text-center bg-gradient-to-br from-blue-50 to-slate-50 hover:border-blue-500 transition mb-8">
+        {% csrf_token %}
+        <i data-lucide="upload-cloud" class="w-16 h-16 mx-auto text-blue-500 mb-4"></i>
+        <p class="text-xl font-bold text-slate-900">Drag and drop medical PDF or Images</p>
+        <p class="text-sm text-slate-500 mt-3 font-medium">Files are encrypted with AES-256 before storage</p>
+        <div class="mt-8 grid grid-cols-1 gap-6 max-w-md mx-auto">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.report_name.label_tag }}</label>
+                {{ form.report_name }}
+                {% if form.report_name.errors %}<p class="text-red-600 text-xs mt-2">{{ form.report_name.errors|striptags }}</p>{% endif %}
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.category.label_tag }}</label>
+                {{ form.category }}
+                {% if form.category.errors %}<p class="text-red-600 text-xs mt-2">{{ form.category.errors|striptags }}</p>{% endif %}
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.uploaded_file.label_tag }}</label>
+                {{ form.uploaded_file }}
+                {% if form.uploaded_file.errors %}<p class="text-red-600 text-xs mt-2">{{ form.uploaded_file.errors|striptags }}</p>{% endif %}
+            </div>
+        </div>
+        <style>
+            input[type="text"], select {
+                @apply w-full bg-white border border-slate-300 rounded-2xl py-2.5 px-4 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition;
+            }
+            input[type="file"] {
+                @apply block w-full text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100;
+            }
+        </style>
+        <div class="mt-8">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 transition duration-200">Upload File</button>
+        </div>
+    </form>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg shadow-blue-100/50">
+        <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <i data-lucide="clock" class="w-5 h-5 text-blue-600"></i> Recent Scanned Files
+        </h3>
+        <div class="space-y-3">
             {% for r in recent_reports %}
-                <div class="flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg">
+                <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl border border-slate-200 transition">
                     <div class="flex items-center gap-3">
-                        <i data-lucide="file-text" class="text-blue-400"></i>
-                        <a href="{% url 'report_detail' r.pk %}" class="hover:underline">{{ r.report_name }}</a>
+                        <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                        <a href="{% url 'report_detail' r.pk %}" class="font-semibold text-slate-900 hover:text-blue-600 transition">{{ r.report_name }}</a>
                     </div>
-                    <a href="{{ r.uploaded_file.url }}" download class="text-blue-400 text-sm font-semibold">Download</a>
+                    <a href="{{ r.uploaded_file.url }}" download class="text-blue-600 hover:text-blue-700 font-semibold text-sm transition">Download</a>
                 </div>
             {% empty %}
-                <p class="text-slate-500">No recent files.</p>
+                <p class="text-slate-500 text-center py-6 font-medium">No recent files uploaded yet.</p>
             {% endfor %}
         </div>
     </div>
-    <script>lucide.createIcons();</script>
-</body>
-</html>
+</div>
+{% endblock %}

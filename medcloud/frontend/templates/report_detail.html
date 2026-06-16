@@ -1,28 +1,68 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>{{ report.report_name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#0f172a] text-slate-200 p-8">
-    <div class="max-w-4xl mx-auto bg-[#1e293b] p-6 rounded-2xl">
-        <h1 class="text-2xl font-bold">{{ report.report_name }}</h1>
-        <p class="text-sm text-slate-400">Category: {{ report.get_category_display }} | Uploaded: {{ report.upload_date }}</p>
-        <div class="mt-4">
-            <a href="{{ report.uploaded_file.url }}" class="bg-blue-600 px-4 py-2 rounded text-white" download>Download PDF</a>
-            <form method="post" action="{% url 'report_delete' report.pk %}" style="display:inline">{% csrf_token %}
-                <button type="submit" class="ml-2 bg-red-600 px-3 py-2 rounded">Delete</button>
+{% extends 'base.html' %}
+
+{% block title %}{{ report.report_name }} | DiagoVault AI{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <a href="{% url 'reports' %}" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-8 transition">
+        <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Reports
+    </a>
+
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-lg shadow-blue-100/50 p-8 mb-8">
+        <div class="flex items-start justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">{{ report.report_name }}</h1>
+                <div class="flex items-center gap-4 mt-3 text-slate-600 font-medium">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700">{{ report.get_category_display }}</span>
+                    <span>{{ report.upload_date|date:"F d, Y \a\t g:i A" }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+            <a href="{{ report.uploaded_file.url }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl font-semibold shadow-lg shadow-blue-200 transition" download>Download PDF</a>
+            <form method="post" action="{% url 'report_delete' report.pk %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-100 hover:bg-red-200 text-red-700 px-6 py-2.5 rounded-2xl font-semibold transition" onclick="return confirm('Are you sure you want to delete this report?')">Delete Report</button>
             </form>
         </div>
-        <section class="mt-6">
-            <h3 class="font-bold">AI Summary</h3>
-            <p class="text-slate-300">{{ report.ai_summary|default:'No summary available.' }}</p>
-        </section>
-        <section class="mt-4">
-            <h3 class="font-bold">Doctor Notes</h3>
-            <p class="text-slate-300">{{ report.doctor_notes|default:'No notes.' }}</p>
-        </section>
     </div>
-</body>
-</html>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            <section class="bg-white rounded-3xl border border-slate-200 shadow-lg shadow-blue-100/50 p-8 mb-8">
+                <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="brain" class="w-5 h-5 text-blue-600"></i> AI Summary
+                </h3>
+                <p class="text-slate-700 leading-relaxed">{{ report.ai_summary|default:'No summary available.' }}</p>
+            </section>
+
+            <section class="bg-white rounded-3xl border border-slate-200 shadow-lg shadow-blue-100/50 p-8">
+                <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="stethoscope" class="w-5 h-5 text-green-600"></i> Doctor Notes
+                </h3>
+                <p class="text-slate-700 leading-relaxed">{{ report.doctor_notes|default:'No notes available.' }}</p>
+            </section>
+        </div>
+
+        <div>
+            <div class="bg-gradient-to-br from-blue-50 to-slate-50 rounded-3xl border border-slate-200 p-6">
+                <h4 class="font-bold text-slate-900 mb-4">Report Information</h4>
+                <div class="space-y-4 text-sm">
+                    <div>
+                        <p class="text-slate-500 font-medium">Category</p>
+                        <p class="text-slate-900 font-semibold">{{ report.get_category_display }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 font-medium">Uploaded</p>
+                        <p class="text-slate-900 font-semibold">{{ report.upload_date|date:"M d, Y" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 font-medium">Status</p>
+                        <p class="text-slate-900 font-semibold">Processed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
