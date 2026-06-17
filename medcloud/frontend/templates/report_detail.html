@@ -19,7 +19,8 @@
             </div>
         </div>
         <div class="flex gap-3 flex-wrap">
-            <a href="{{ report.uploaded_file.url }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl font-semibold shadow-lg shadow-blue-200 transition" download>Download PDF</a>
+            <a href="{% url 'secure_report_download' report.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl font-semibold shadow-lg shadow-blue-200 transition">Download PDF</a>
+            <a href="{% url 'report_verify' report.pk %}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-2xl font-semibold shadow-lg shadow-emerald-200 transition">Re-verify</a>
             <form method="post" action="{% url 'report_delete' report.pk %}" class="inline">
                 {% csrf_token %}
                 <button type="submit" class="bg-red-100 hover:bg-red-200 text-red-700 px-6 py-2.5 rounded-2xl font-semibold transition" onclick="return confirm('Are you sure you want to delete this report?')">Delete Report</button>
@@ -58,7 +59,15 @@
                     </div>
                     <div>
                         <p class="text-slate-500 font-medium">Status</p>
-                        <p class="text-slate-900 font-semibold">Processed</p>
+                        <p class="text-slate-900 font-semibold">{{ report.verification_status|title }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 font-medium">Blockchain</p>
+                        <p class="text-slate-900 font-semibold">{% if report.blockchain_records.count %}Recorded{% else %}Missing{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 font-medium">Hash</p>
+                        <p class="text-slate-900 font-semibold truncate">{{ report.hash_value }}</p>
                     </div>
                 </div>
             </div>

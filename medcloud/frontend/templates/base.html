@@ -60,6 +60,9 @@
                         <a href="{% url 'upload' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all {% if request.resolver_match.url_name == 'upload' %}sidebar-link-active{% else %}sidebar-link{% endif %}">
                             <i data-lucide="cloud-upload" class="w-5 h-5"></i> Upload Records
                         </a>
+                        <a href="{% url 'blockchain_status' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all {% if request.resolver_match.url_name == 'blockchain_status' %}sidebar-link-active{% else %}sidebar-link{% endif %}">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> Blockchain Status
+                        </a>
                         <a href="#appointments-section" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all sidebar-link">
                             <i data-lucide="calendar" class="w-5 h-5"></i> Appointments
                         </a>

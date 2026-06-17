@@ -27,10 +27,10 @@ class ProfileForm(forms.ModelForm):
 class MedicalReportForm(forms.ModelForm):
     class Meta:
         model = MedicalReport
-        fields = ('report_name', 'category', 'uploaded_file')
+        fields = ('report_name', 'category', 'encrypted_file')
 
-    def clean_uploaded_file(self):
-        f = self.cleaned_data.get('uploaded_file')
+    def clean_encrypted_file(self):
+        f = self.cleaned_data.get('encrypted_file')
         if not f:
             raise forms.ValidationError('No file uploaded')
 
@@ -41,7 +41,7 @@ class MedicalReportForm(forms.ModelForm):
 
         # Validate file type
         valid_mime = ['application/pdf', 'image/png', 'image/jpeg']
-        content_type = f.content_type
+        content_type = getattr(f, 'content_type', None)
         if content_type not in valid_mime:
             raise forms.ValidationError('Unsupported file type. Allowed: PDF, PNG, JPG, JPEG')
 

@@ -18,10 +18,11 @@ class Migration(migrations.Migration):
             name='Appointment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('doctor_name', models.CharField(max_length=255)),
                 ('appointment_date', models.DateTimeField()),
                 ('status', models.CharField(choices=[('scheduled', 'Scheduled'), ('completed', 'Completed'), ('cancelled', 'Cancelled')], default='scheduled', max_length=32)),
+                ('notes', models.TextField(blank=True, null=True)),
                 ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='appointments', to=settings.AUTH_USER_MODEL)),
+                ('doctor', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, null=True, related_name='appointments_as_doctor', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -30,11 +31,17 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('report_name', models.CharField(max_length=255)),
                 ('category', models.CharField(choices=[('lab', 'Laboratory'), ('cardio', 'Cardiology'), ('immun', 'Immunization'), ('other', 'Other')], default='other', max_length=32)),
-                ('uploaded_file', models.FileField(upload_to='reports/')),
+                ('encrypted_file', models.FileField(upload_to='reports/encrypted/')),
+                ('original_filename', models.CharField(max_length=255)),
                 ('upload_date', models.DateTimeField(auto_now_add=True)),
+                ('file_hash', models.CharField(blank=True, max_length=64, null=True)),
+                ('blockchain_txid', models.CharField(blank=True, max_length=128, null=True)),
+                ('block_number', models.PositiveIntegerField(blank=True, null=True)),
+                ('verification_status', models.CharField(choices=[('pending', 'Pending'), ('verified', 'Verified'), ('tampered', 'Tampered')], default='pending', max_length=20)),
+                ('encryption_metadata', models.JSONField(blank=True, null=True)),
                 ('ai_summary', models.TextField(blank=True, null=True)),
                 ('doctor_notes', models.TextField(blank=True, null=True)),
-                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reports', to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='medical_reports', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -50,6 +57,32 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Notification',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('title', models.CharField(max_length=255)),
+                ('message', models.TextField()),
+                ('is_read', models.BooleanField(default=False)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifications', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='AuditLog',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('action', models.CharField(choices=[('login', 'Login'), ('logout', 'Logout'), ('upload', 'Upload'), ('download', 'Download'), ('view_report', 'Report View'), ('delete', 'Delete'), ('appointment_created', 'Appointment Created'), ('appointment_updated', 'Appointment Updated'), ('appointment_cancelled', 'Appointment Cancelled')], max_length=50)),
+                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                ('ip_address', models.GenericIPAddressField(blank=True, null=True)),
+                ('details', models.TextField(blank=True, null=True)),
+                ('report', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='audit_logs', to='frontend.medicalreport')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='audit_logs', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['-timestamp'],
+            },
+        ),
+        migrations.CreateModel(
             name='Subscription',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -63,10 +96,12 @@ class Migration(migrations.Migration):
             name='UserProfile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('role', models.CharField(choices=[('patient', 'Patient'), ('doctor', 'Doctor'), ('admin', 'Administrator')], default='patient', max_length=20)),
                 ('phone', models.CharField(blank=True, max_length=20, null=True)),
                 ('dob', models.DateField(blank=True, null=True)),
                 ('blood_group', models.CharField(blank=True, max_length=5, null=True)),
                 ('address', models.TextField(blank=True, null=True)),
+                ('assigned_patients', models.ManyToManyField(blank=True, related_name='assigned_doctors', to=settings.AUTH_USER_MODEL)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

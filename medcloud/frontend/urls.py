@@ -12,7 +12,11 @@ urlpatterns = [
     path('upload/', views.UploadView.as_view(), name='upload'),
     path('reports/', views.ReportsListView.as_view(), name='reports'),
     path('reports/<int:pk>/', views.ReportDetailView.as_view(), name='report_detail'),
+    path('reports/<int:pk>/download/', views.ReportDownloadView.as_view(), name='report_download'),
+    path('reports/<int:pk>/secure-download/', views.SecureReportDownloadView.as_view(), name='secure_report_download'),
     path('reports/<int:pk>/delete/', views.ReportDeleteView.as_view(), name='report_delete'),
+    path('reports/<int:pk>/verify/', views.ReportVerificationView.as_view(), name='report_verify'),
+    path('blockchain/status/', views.BlockchainStatusView.as_view(), name='blockchain_status'),
 
     path('setting/', views.SettingsView.as_view(), name='setting'),
 

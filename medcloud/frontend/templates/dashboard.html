@@ -125,6 +125,33 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-cardBg p-6 rounded-2xl border border-borderColor card-shadow hover:shadow-xl transition-all">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-green-100 rounded-xl text-green-600"><i data-lucide="check-circle"></i></div>
+                    <span class="text-xs text-textSecondary font-semibold">Verified</span>
+                </div>
+                <h4 class="text-textSecondary text-sm font-medium">Verified Reports</h4>
+                <p class="text-3xl font-bold text-textPrimary mt-2">{{ verified_reports }}</p>
+            </div>
+            <div class="bg-cardBg p-6 rounded-2xl border border-borderColor card-shadow hover:shadow-xl transition-all">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-amber-100 rounded-xl text-amber-600"><i data-lucide="hourglass"></i></div>
+                    <span class="text-xs text-textSecondary font-semibold">Pending</span>
+                </div>
+                <h4 class="text-textSecondary text-sm font-medium">Pending Reports</h4>
+                <p class="text-3xl font-bold text-textPrimary mt-2">{{ pending_reports }}</p>
+            </div>
+            <div class="bg-cardBg p-6 rounded-2xl border border-borderColor card-shadow hover:shadow-xl transition-all">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-rose-100 rounded-xl text-rose-600"><i data-lucide="alert-circle"></i></div>
+                    <span class="text-xs text-textSecondary font-semibold">Tampered</span>
+                </div>
+                <h4 class="text-textSecondary text-sm font-medium">Tampered Reports</h4>
+                <p class="text-3xl font-bold text-textPrimary mt-2">{{ tampered_reports }}</p>
+            </div>
+        </div>
+
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 lg:col-span-8 space-y-8">
                 

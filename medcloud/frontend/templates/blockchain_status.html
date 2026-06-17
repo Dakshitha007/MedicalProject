@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Blockchain Status | DiagoVault AI{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-4xl font-bold text-slate-900">Blockchain Audit</h1>
+            <p class="text-slate-500 mt-2">View the report integrity ledger and Merkle root summary.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">Blockchain Summary</h3>
+            <div class="space-y-3 text-sm text-slate-700">
+                <div>
+                    <p class="text-slate-500">Chain Length</p>
+                    <p class="font-semibold text-slate-900">{{ summary.length }}</p>
+                </div>
+                <div>
+                    <p class="text-slate-500">Merkle Root</p>
+                    <p class="font-semibold text-slate-900 break-all">{{ summary.merkle_root|default:'Unavailable' }}</p>
+                </div>
+                <div>
+                    <p class="text-slate-500">Latest Block</p>
+                    <p class="font-semibold text-slate-900">{% if summary.latest_block %}#{{ summary.latest_block.index }}{% else %}None{% endif %}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">Chain Activity</h3>
+            <div class="space-y-4">
+                {% for block in latest_blocks %}
+                <div class="rounded-3xl border border-slate-200 p-4 bg-slate-50">
+                    <p class="text-sm text-slate-500">Block #{{ block.block_number }} • {{ block.block_timestamp|date:'M d, Y H:i' }}</p>
+                    <p class="text-slate-900 font-semibold">TX: {{ block.transaction_reference|slice:':16' }}... </p>
+                    <p class="text-slate-600 text-sm truncate">Report: {{ block.report.report_name }} • Status: {{ block.verification_status }}</p>
+                </div>
+                {% empty %}
+                <p class="text-slate-500">No blockchain records available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-lg">
+        <h3 class="text-lg font-semibold mb-4">Report History</h3>
+        {% if report_history %}
+            <div class="space-y-4">
+                {% for block in report_history %}
+                <div class="rounded-3xl border border-slate-200 p-4 bg-slate-50">
+                    <p class="text-sm text-slate-500">Block #{{ block.index }} • {{ block.timestamp|date:'M d, Y H:i' }}</p>
+                    <p class="text-slate-900 font-semibold">TX ID: {{ block.hash }}</p>
+                    <p class="text-slate-600 text-sm">Report ID: {{ block.data.report_id }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-slate-500">Enter a report ID in the query string to see its history.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

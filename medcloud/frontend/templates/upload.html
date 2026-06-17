@@ -34,9 +34,9 @@
                 {% if form.category.errors %}<p class="text-red-600 text-xs mt-2">{{ form.category.errors|striptags }}</p>{% endif %}
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.uploaded_file.label_tag }}</label>
-                {{ form.uploaded_file }}
-                {% if form.uploaded_file.errors %}<p class="text-red-600 text-xs mt-2">{{ form.uploaded_file.errors|striptags }}</p>{% endif %}
+                <label class="block text-sm font-semibold text-slate-700 mb-2">{{ form.encrypted_file.label_tag }}</label>
+                {{ form.encrypted_file }}
+                {% if form.encrypted_file.errors %}<p class="text-red-600 text-xs mt-2">{{ form.encrypted_file.errors|striptags }}</p>{% endif %}
             </div>
         </div>
         <style>
@@ -65,7 +65,7 @@
                         </div>
                         <a href="{% url 'report_detail' r.pk %}" class="font-semibold text-slate-900 hover:text-blue-600 transition">{{ r.report_name }}</a>
                     </div>
-                    <a href="{{ r.uploaded_file.url }}" download class="text-blue-600 hover:text-blue-700 font-semibold text-sm transition">Download</a>
+                    <a href="{{ r.encrypted_file.url }}" download class="text-blue-600 hover:text-blue-700 font-semibold text-sm transition">Download</a>
                 </div>
             {% empty %}
                 <p class="text-slate-500 text-center py-6 font-medium">No recent files uploaded yet.</p>
