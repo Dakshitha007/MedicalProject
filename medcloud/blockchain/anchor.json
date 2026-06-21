@@ -1,0 +1,8 @@
+{
+  "chain_length": 1,
+  "latest_block_hash": "f774a513cb9dad6a4a81f019468582fc52a596d505a308b6f36c381bf19876c2",
+  "latest_block_timestamp": 1782040864.8351982,
+  "merkle_root": "389e2c9a646b8154420ae8c2b194c1882b7375ee1fd01322d099656cc3390c37",
+  "anchor_timestamp": 1782040864.8834453,
+  "signature": "75c49cbc3792e112f0d0e890fe697b5e22705575e7fd441e78cc08144cebd67c"
+}

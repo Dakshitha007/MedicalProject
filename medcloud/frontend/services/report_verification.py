@@ -21,16 +21,23 @@ from blockchain.blockchain_service import verify_report_hash, is_chain_valid
 
 def compute_report_hash(report: MedicalReport, use_encrypted: bool = True) -> Optional[str]:
     """Compute SHA-256 for a report file. Prefer encrypted file if present."""
-    file_field = report.encrypted_file if use_encrypted and report.encrypted_file else report.original_filename and None
-    # prefer FileField path if available
     path = None
-    if getattr(report, 'encrypted_file', None) and getattr(report.encrypted_file, 'path', None):
+    if use_encrypted and getattr(report, 'encrypted_file', None) and getattr(report.encrypted_file, 'path', None):
         path = Path(report.encrypted_file.path)
     elif getattr(report, 'original_file', None) and getattr(report.original_file, 'path', None):
         path = Path(report.original_file.path)
 
     if not path or not path.exists():
         return None
+
+    safe_root = Path(settings.MEDIA_ROOT).resolve()
+    try:
+        resolved = path.resolve()
+        if not resolved.is_relative_to(safe_root):
+            return None
+    except Exception:
+        return None
+
     return _file_sha256(path)
 
 

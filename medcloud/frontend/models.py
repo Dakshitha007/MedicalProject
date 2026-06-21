@@ -1,5 +1,8 @@
+import hashlib
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
+from django.utils import timezone
+from blockchain.blockchain_service import add_consent_hash
 
 
 class UserProfile(models.Model):
@@ -20,6 +23,8 @@ class UserProfile(models.Model):
         blank=True,
         related_name='assigned_doctors',
     )
+    mfa_enabled = models.BooleanField(default=False)
+    totp_secret = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):
         return f"Profile: {self.user.get_full_name() or self.user.username}"
@@ -72,16 +77,83 @@ class MedicalReport(models.Model):
 
 
 class BlockchainRecord(models.Model):
-    report = models.ForeignKey(MedicalReport, on_delete=models.CASCADE, related_name='blockchain_records')
-    report_hash = models.CharField(max_length=128, db_index=True)
+    report = models.ForeignKey(MedicalReport, on_delete=models.CASCADE, related_name='blockchain_records', blank=True, null=True)
+    report_hash = models.CharField(max_length=128, db_index=True, blank=True, null=True)
     transaction_reference = models.CharField(max_length=256, blank=True, null=True)
     block_timestamp = models.DateTimeField(blank=True, null=True)
     verification_status = models.CharField(max_length=32, default='pending')
+    consent = models.ForeignKey('Consent', on_delete=models.CASCADE, related_name='blockchain_records', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        if self.consent_id:
+            return f"ConsentBlockchainRecord: {self.consent_id} @ {self.block_timestamp or 'unknown'}"
         return f"BlockchainRecord: {self.report_id} @ {self.block_timestamp or 'unknown'}"
+
+
+class Consent(models.Model):
+    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='consents')
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='granted_consents')
+    scope = models.CharField(max_length=128)
+    purpose = models.TextField()
+    granted_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    revoked = models.BooleanField(default=False)
+    signature_hash = models.CharField(max_length=128, blank=True)
+
+    def is_active(self):
+        if self.revoked:
+            return False
+        if self.expires_at and self.expires_at <= timezone.now():
+            return False
+        return True
+
+    consent_txid = models.CharField(max_length=128, blank=True, null=True)
+    consent_block_number = models.PositiveIntegerField(blank=True, null=True)
+
+    def _compute_signature_hash(self):
+        parts = [
+            str(self.patient_id),
+            str(self.doctor_id),
+            self.scope,
+            self.purpose,
+            self.granted_at.isoformat() if self.granted_at else '',
+            self.expires_at.isoformat() if self.expires_at else '',
+            str(self.revoked),
+        ]
+        return hashlib.sha256('|'.join(parts).encode('utf-8')).hexdigest()
+
+    def save(self, *args, **kwargs):
+        new_record = self.pk is None
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            signature = self._compute_signature_hash()
+            if self.signature_hash != signature or new_record:
+                self.signature_hash = signature
+                try:
+                    txid_data = add_consent_hash(
+                        consent_id=self.id,
+                        patient_id=self.patient_id,
+                        doctor_id=self.doctor_id,
+                        scope=self.scope,
+                        purpose=self.purpose,
+                        granted_at=self.granted_at,
+                        expires_at=self.expires_at,
+                        revoked=self.revoked,
+                        signature_hash=self.signature_hash,
+                    )
+                except Exception:
+                    # Ensure we do not leave a consent record with an unanchored blockchain entry.
+                    if new_record and self.pk:
+                        self.delete()
+                    raise
+                self.consent_txid = txid_data['txid']
+                self.consent_block_number = txid_data['block_number']
+                super().save(update_fields=['signature_hash', 'consent_txid', 'consent_block_number'])
+
+    def __str__(self):
+        return f"Consent: {self.patient} -> {self.doctor} ({self.scope})"
 
 
 class Appointment(models.Model):

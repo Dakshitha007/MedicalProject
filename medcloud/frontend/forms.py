@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
@@ -39,10 +41,27 @@ class MedicalReportForm(forms.ModelForm):
         if f.size > max_size:
             raise forms.ValidationError('File is too large (max 10MB)')
 
-        # Validate file type
-        valid_mime = ['application/pdf', 'image/png', 'image/jpeg']
-        content_type = getattr(f, 'content_type', None)
-        if content_type not in valid_mime:
-            raise forms.ValidationError('Unsupported file type. Allowed: PDF, PNG, JPG, JPEG')
+        # Validate file extension
+        allowed_extensions = ['.pdf', '.png', '.jpg', '.jpeg']
+        filename = getattr(f, 'name', '')
+        ext = Path(filename).suffix.lower()
+        if ext not in allowed_extensions:
+            raise forms.ValidationError('Unsupported file extension. Allowed: PDF, PNG, JPG, JPEG')
+
+        # Validate magic bytes instead of trusting MIME type
+        header = f.read(16)
+        f.seek(0)
+        if not self._is_valid_magic_bytes(header, ext):
+            raise forms.ValidationError('File content does not match its declared type.')
 
         return f
+
+    @staticmethod
+    def _is_valid_magic_bytes(header: bytes, extension: str) -> bool:
+        if extension == '.pdf':
+            return header.startswith(b'%PDF-')
+        if extension == '.png':
+            return header.startswith(b'\x89PNG\r\n\x1a\n')
+        if extension in ('.jpg', '.jpeg'):
+            return header.startswith(b'\xff\xd8\xff')
+        return False

@@ -11,6 +11,250 @@
         "file_hash": "b9a353d99108434b73ba94f6ad210faa818575d1ebdcf2d9471218cbdec66688",
         "timestamp": 1781676506.7244246
       }
+    },
+    {
+      "index": 2,
+      "timestamp": 1782028827.4950306,
+      "previous_hash": "5785660734a91992ac5b0b4a6e3a62b224352eb5e9a47760b42e365aa158298a",
+      "hash": "00b1f62a4521dd19ce180514e379b498a9899d9454ffa1873423763859eeab0c",
+      "signature": "1cd882c8e8ac0f691c6ea5c7de6a5c57c09de65babd543326fd65702305e51c2",
+      "data": {
+        "type": "report",
+        "report_id": 1,
+        "user_id": 1,
+        "file_hash": "a8c7a68a35e763da582b54cdcec0ccf49b90b65dd1be5457ae2e4a8a597e886d",
+        "timestamp": 1782028827.4950306
+      }
+    },
+    {
+      "index": 3,
+      "timestamp": 1782029257.8602014,
+      "previous_hash": "00b1f62a4521dd19ce180514e379b498a9899d9454ffa1873423763859eeab0c",
+      "hash": "5e9bdb1263fd6556835799d8d58ed65476b206ae6eb4ba79b5cf4c4099d93792",
+      "signature": "51eec6e432c8630585088cfe9938b0867edd79f59ac76243696e4edb8007117a",
+      "data": {
+        "type": "report",
+        "report_id": 3,
+        "user_id": 5,
+        "file_hash": "aa67bbf9350442fb439af2f8039c66bda550cbc0ac3049a4c6fb924c02945cb0",
+        "timestamp": 1782029257.8602014
+      }
+    },
+    {
+      "index": 4,
+      "timestamp": 1782029275.3911939,
+      "previous_hash": "5e9bdb1263fd6556835799d8d58ed65476b206ae6eb4ba79b5cf4c4099d93792",
+      "hash": "2fdeb21a6b799093aed86a4d8269ed4a7b41d0271817200670e28ed99c10e950",
+      "signature": "edbfed1d797a8e15da1670fe09ef1397dbb519253092f908ef202784abef5d6b",
+      "data": {
+        "type": "report",
+        "report_id": 4,
+        "user_id": 6,
+        "file_hash": "94024ba7ecb3af2a01949f1b71d4c9ebdad006ad3cc4f2df1c3260a37f6bd079",
+        "timestamp": 1782029275.3911939
+      }
+    },
+    {
+      "index": 5,
+      "timestamp": 1782030731.7785995,
+      "previous_hash": "2fdeb21a6b799093aed86a4d8269ed4a7b41d0271817200670e28ed99c10e950",
+      "hash": "983d37467afcbde03ed06028ebaa1b45a4e43674784de43f12e294535a10c5b0",
+      "signature": "fd852f18cf2307ba3f039a769494e131bee84e120632fd0876cd8439849cad18",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T08:32:11.778599+00:00",
+        "expires_at": "2026-06-20T08:32:11.778599+00:00",
+        "revoked": false,
+        "signature_hash": "0cc7b33993170f99528bbf83be80c46fe49fc1874eee1ee35cf2bb5c3aee0356",
+        "timestamp": 1782030731.7785995
+      }
+    },
+    {
+      "index": 6,
+      "timestamp": 1782030733.7394009,
+      "previous_hash": "983d37467afcbde03ed06028ebaa1b45a4e43674784de43f12e294535a10c5b0",
+      "hash": "f85de77d513d39871977965593c643ccf71ee574298420759110361aba16eb6f",
+      "signature": "c166a64e345d20e4449d498bcf79e6525fabb5fc0edf5e1a216f9ce608c7fd1a",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T08:32:13.739401+00:00",
+        "expires_at": null,
+        "revoked": true,
+        "signature_hash": "1b8d35e84a74698595ddbc6f7755a48ed34f35f172c70c4dc6c79e6a9b5d73d2",
+        "timestamp": 1782030733.7394009
+      }
+    },
+    {
+      "index": 7,
+      "timestamp": 1782031714.0900233,
+      "previous_hash": "f85de77d513d39871977965593c643ccf71ee574298420759110361aba16eb6f",
+      "hash": "ea886ca00608cd940ecba72858ed4d3c7e40448b119ab024894783b5fad24e6b",
+      "signature": "f19ac629667d6782ff508f5a5cd4d2da37acdba0d6207625c0c1618e2522e317",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T08:48:34.090023+00:00",
+        "expires_at": "2026-06-20T08:48:34.090023+00:00",
+        "revoked": false,
+        "signature_hash": "123bfa64de1e1cbd1fa9f3ca1cf0f8cd1c7a0b1997638ba67b97e736ba36302c",
+        "timestamp": 1782031714.0900233
+      }
+    },
+    {
+      "index": 8,
+      "timestamp": 1782031715.9142542,
+      "previous_hash": "ea886ca00608cd940ecba72858ed4d3c7e40448b119ab024894783b5fad24e6b",
+      "hash": "c5eb08aaa8cd719c60cf881be8ca159c700737699eb1177c051426c580688cb7",
+      "signature": "2667cfb8aa26da2c33016a71014bc1e67b26da330c749d19bfa80fa9466f39c2",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T08:48:35.914254+00:00",
+        "expires_at": null,
+        "revoked": true,
+        "signature_hash": "77fe72cd654e50d1b7d2d39cae8f05b3d91508670d39a1ce3d14fa74cda11699",
+        "timestamp": 1782031715.9142542
+      }
+    },
+    {
+      "index": 9,
+      "timestamp": 1782033684.8952832,
+      "previous_hash": "c5eb08aaa8cd719c60cf881be8ca159c700737699eb1177c051426c580688cb7",
+      "hash": "859168628afbff2ad816ea1cd88788196dd7d01d2ad02694763d1e816aa24967",
+      "signature": "ca3c0e6bd4609523370436dff1f9a057c0c11c7f79a05cabff9fa746c6e80110",
+      "data": {
+        "type": "report",
+        "report_id": 5,
+        "user_id": 11,
+        "file_hash": "bd531b5c426340a475d5ebe13f3fe0be64f18b5586a0a7399b18f1d7b94d67e2",
+        "timestamp": 1782033684.8952832
+      }
+    },
+    {
+      "index": 10,
+      "timestamp": 1782033717.1343813,
+      "previous_hash": "859168628afbff2ad816ea1cd88788196dd7d01d2ad02694763d1e816aa24967",
+      "hash": "c8f3305babef97c664a4e5ea2d378d133890ecdb617ae824233e758558871721",
+      "signature": "1d244d9c4897553e3ffbce6558dec8e2117135d0d52c2c6daa155e390c9a833c",
+      "data": {
+        "type": "report",
+        "report_id": 6,
+        "user_id": 12,
+        "file_hash": "a0945d95d80f16b920a6de3ef322b69516d7c8d76c01c2bf97f6da9afa9d943e",
+        "timestamp": 1782033717.1343813
+      }
+    },
+    {
+      "index": 11,
+      "timestamp": 1782033959.9257536,
+      "previous_hash": "c8f3305babef97c664a4e5ea2d378d133890ecdb617ae824233e758558871721",
+      "hash": "e10d1648db11eedb0ebdc42a90dc3f46af2ff28839c57a26e7fd05b994f1f273",
+      "signature": "ec9d63f7127539367218eb26a7cce71fbdc05bfcdb58a1004eafd57def772a93",
+      "data": {
+        "type": "report",
+        "report_id": 7,
+        "user_id": 13,
+        "file_hash": "d838665422b408bfc02487dc552b09e5d085550c972b9d03f9df48a22ff7c5ff",
+        "timestamp": 1782033959.9257536
+      }
+    },
+    {
+      "index": 12,
+      "timestamp": 1782034013.7090003,
+      "previous_hash": "e10d1648db11eedb0ebdc42a90dc3f46af2ff28839c57a26e7fd05b994f1f273",
+      "hash": "3ca043444842d0e18d6a7260d4dea63c4d664aadf8aedbdf7ffda68a39fd2b18",
+      "signature": "4e11846bceb82ab6c8d2e0202950cc6abbf6d12bf685de9cfe2d916a72b07526",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T09:26:53.709000+00:00",
+        "expires_at": "2026-06-20T09:26:53.709000+00:00",
+        "revoked": false,
+        "signature_hash": "ca01054fd26f430d7be6f69dedcf946dd236286894fda8d3fe2920f81aed1dfc",
+        "timestamp": 1782034013.7090003
+      }
+    },
+    {
+      "index": 13,
+      "timestamp": 1782034015.8314288,
+      "previous_hash": "3ca043444842d0e18d6a7260d4dea63c4d664aadf8aedbdf7ffda68a39fd2b18",
+      "hash": "1425ff0e738afe34b5727120ce084b831d260a49b61040cb84254896e6f5b658",
+      "signature": "35aacb3ff6357d4a95b80b5be916d8748c16f79871907e05f769437d3c631558",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T09:26:55.825841+00:00",
+        "expires_at": null,
+        "revoked": true,
+        "signature_hash": "c3a5383cbf4b70cee41fa439dc56d50ddb6dd6235bd9af0b1968da97b5b40ee2",
+        "timestamp": 1782034015.8314288
+      }
+    },
+    {
+      "index": 14,
+      "timestamp": 1782034255.912061,
+      "previous_hash": "1425ff0e738afe34b5727120ce084b831d260a49b61040cb84254896e6f5b658",
+      "hash": "77a6e862784c88e589fbc4fdb504d00f09954b2533828d8e3c664bcb2a08a65d",
+      "signature": "a5143a9448d231cd5e08c135443e74c7695dfacc88ffd8e97f5589643e01a443",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T09:30:55.912060+00:00",
+        "expires_at": "2026-06-20T09:30:55.912060+00:00",
+        "revoked": false,
+        "signature_hash": "88a40a1e58c36303d1e12c67a1b38497a86af5e2f69efab765a7c8927b3a143b",
+        "timestamp": 1782034255.912061
+      }
+    },
+    {
+      "index": 15,
+      "timestamp": 1782034257.890821,
+      "previous_hash": "77a6e862784c88e589fbc4fdb504d00f09954b2533828d8e3c664bcb2a08a65d",
+      "hash": "dd520118a627632a8d407955269f1136e506ea9dcfbc4343869a537712b5902a",
+      "signature": "a117adc93cd4c4ea7822316c3c11abe9bac9644894a0f9c45c4b4224ba907627",
+      "data": {
+        "type": "consent",
+        "consent_id": 1,
+        "patient_id": 2,
+        "doctor_id": 3,
+        "scope": "read",
+        "purpose": "test",
+        "granted_at": "2026-06-21T09:30:57.890820+00:00",
+        "expires_at": null,
+        "revoked": true,
+        "signature_hash": "ac956208bee20744874c2e44129d944cb769b6a47da0ab2c711fe37f0fb9c997",
+        "timestamp": 1782034257.890821
+      }
     }
   ]
 }

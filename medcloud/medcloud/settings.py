@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -24,23 +25,86 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    raise ImproperlyConfigured('DJANGO_SECRET_KEY environment variable is required.')
+def get_env_variable(name, default=None, required=True):
+    value = os.getenv(name, default)
+    if required and not value:
+        raise ImproperlyConfigured(f'{name} environment variable is required.')
+    return value
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+
+def validate_secret_key(secret_key):
+    if not secret_key:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must be set.')
+    if len(secret_key) < 50:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must be at least 50 characters long.')
+    if secret_key.startswith('django-insecure-'):
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must not use the insecure Django auto-generated prefix.')
+    if len(set(secret_key)) < 5:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must contain sufficient entropy and unique characters.')
+    return secret_key
+
+
+SECRET_KEY = validate_secret_key(get_env_variable('DJANGO_SECRET_KEY'))
+
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
+DEV_INSECURE_MODE = os.getenv('DEV_INSECURE_MODE', 'False').lower() in ('true', '1', 'yes')
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',') if host.strip()]
+if DEV_INSECURE_MODE and DEBUG is False:
+    for fallback_host in ('127.0.0.1', 'localhost'):
+        if fallback_host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(fallback_host)
 if not DEBUG and not ALLOWED_HOSTS:
     raise ImproperlyConfigured('DJANGO_ALLOWED_HOSTS must be set when DEBUG is False.')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 FILE_ENCRYPTION_SECRET = os.getenv('FILE_ENCRYPTION_SECRET')
-if not FILE_ENCRYPTION_SECRET:
-    raise ImproperlyConfigured('FILE_ENCRYPTION_SECRET environment variable is required.')
+BLOCKCHAIN_SIGNING_SECRET = os.getenv('BLOCKCHAIN_SIGNING_SECRET')
+BLOCKCHAIN_SIGNING_KEY_PATH = os.getenv('BLOCKCHAIN_SIGNING_KEY_PATH', str(BASE_DIR / 'secrets' / 'blockchain_signing_key.pem'))
+BLOCKCHAIN_SIGNING_PUBLIC_KEY_PATH = os.getenv('BLOCKCHAIN_SIGNING_PUBLIC_KEY_PATH', str(BASE_DIR / 'secrets' / 'blockchain_signing_key.pub.pem'))
+BLOCKCHAIN_LEDGER_ANCHOR_PATH = os.getenv('BLOCKCHAIN_LEDGER_ANCHOR_PATH', str(BASE_DIR / 'blockchain' / 'anchor.json'))
+JWT_SIGNING_KEY = os.getenv('JWT_SIGNING_KEY')
+JWT_VERIFYING_KEY = os.getenv('JWT_VERIFYING_KEY')
+JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256').upper()
+AUDIT_CHAIN_ENFORCE = os.getenv('AUDIT_CHAIN_ENFORCE', 'True').lower() in ('true', '1', 'yes')
+AUDIT_CHAIN_SIGNING_SECRET = os.getenv('AUDIT_CHAIN_SIGNING_SECRET') or BLOCKCHAIN_SIGNING_SECRET
+ANTIVIRUS_SCAN_COMMAND = os.getenv('ANTIVIRUS_SCAN_COMMAND', 'clamscan --no-summary')
 
-BLOCKCHAIN_SIGNING_SECRET = os.getenv('BLOCKCHAIN_SIGNING_SECRET') or FILE_ENCRYPTION_SECRET
-if not BLOCKCHAIN_SIGNING_SECRET:
-    raise ImproperlyConfigured('BLOCKCHAIN_SIGNING_SECRET or FILE_ENCRYPTION_SECRET environment variable is required for blockchain signing.')
+if JWT_ALGORITHM not in ('HS256', 'RS256'):
+    raise ImproperlyConfigured('JWT_ALGORITHM must be either HS256 or RS256.')
+
+if not DEBUG and JWT_ALGORITHM == 'HS256':
+    raise ImproperlyConfigured('HS256 is not acceptable in production. Use RS256 with separate signing and verifying keys.')
+
+if JWT_ALGORITHM == 'HS256' and JWT_SIGNING_KEY == SECRET_KEY:
+    raise ImproperlyConfigured('JWT_SIGNING_KEY must not reuse the Django SECRET_KEY.')
+
+if JWT_ALGORITHM == 'HS256':
+    if not JWT_SIGNING_KEY:
+        raise ImproperlyConfigured('JWT_SIGNING_KEY must be set when JWT_ALGORITHM=HS256.')
+    SIMPLE_JWT_SIGNING_KEY = JWT_SIGNING_KEY
+    SIMPLE_JWT_VERIFYING_KEY = None
+else:
+    if not JWT_SIGNING_KEY or not JWT_VERIFYING_KEY:
+        raise ImproperlyConfigured('JWT_SIGNING_KEY and JWT_VERIFYING_KEY must be set when JWT_ALGORITHM=RS256.')
+    SIMPLE_JWT_SIGNING_KEY = JWT_SIGNING_KEY
+    SIMPLE_JWT_VERIFYING_KEY = JWT_VERIFYING_KEY
+
+# Hardware-backed key management and threshold custody
+HSM_ENABLED = os.getenv('HSM_ENABLED', 'False').lower() in ('true', '1', 'yes')
+HSM_PROVIDER = os.getenv('HSM_PROVIDER', 'local')
+HSM_KEY_ID = os.getenv('HSM_KEY_ID', 'medcloud_master_key')
+HSM_THRESHOLD = int(os.getenv('HSM_THRESHOLD', '3'))
+HSM_PARTY_COUNT = int(os.getenv('HSM_PARTY_COUNT', '5'))
+KEY_CUSTODY_PARTIES = [party.strip() for party in os.getenv('KEY_CUSTODY_PARTIES', 'custodian1,custodian2,custodian3').split(',') if party.strip()]
+
+if not HSM_ENABLED and not DEV_INSECURE_MODE:
+    raise ImproperlyConfigured(
+        'HSM_ENABLED must be True in production mode. Set DEV_INSECURE_MODE=True only for local development and testing.'
+    )
+
+if DEV_INSECURE_MODE:
+    if not FILE_ENCRYPTION_SECRET:
+        raise ImproperlyConfigured('FILE_ENCRYPTION_SECRET is required when DEV_INSECURE_MODE=True.')
 
 
 # Application definition
@@ -55,31 +119,29 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'frontend',
+    'backend',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'medcloud.middleware.ZeroTrustMiddleware',
+    'medcloud.middleware.EmergencyLockdownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'medcloud.middleware.RequestAuditMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if origin.strip()]
 CORS_ALLOW_CREDENTIALS = True
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
 
 ROOT_URLCONF = 'medcloud.urls'
 
@@ -104,7 +166,12 @@ WSGI_APPLICATION = 'medcloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-USE_SQLITE = os.getenv('USE_SQLITE', 'False').lower() in ('true', '1', 'yes')
+use_sqlite_env = os.getenv('USE_SQLITE')
+if use_sqlite_env is None:
+    USE_SQLITE = DEBUG
+else:
+    USE_SQLITE = use_sqlite_env.lower() in ('true', '1', 'yes')
+
 if USE_SQLITE:
     DATABASES = {
         'default': {
@@ -146,6 +213,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 14,
+        },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -168,15 +238,26 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Media files
+# Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Service identity enforcement
+MTLS_REQUIRED = os.getenv('MTLS_REQUIRED', 'False' if DEV_INSECURE_MODE else 'True').lower() in ('true', '1', 'yes')
+MTLS_ALLOWED_CLIENT_FINGERPRINTS = [fp.strip() for fp in os.getenv('MTLS_ALLOWED_CLIENT_FINGERPRINTS', '').split(',') if fp.strip()]
+CERTIFICATE_PINNING_FINGERPRINTS = [fp.strip() for fp in os.getenv('CERTIFICATE_PINNING_FINGERPRINTS', '').split(',') if fp.strip()]
+
+# Monitoring, SIEM and audit anchoring
+SIEM_INGEST_URL = os.getenv('SIEM_INGEST_URL', '')
+SIEM_API_TOKEN = os.getenv('SIEM_API_TOKEN', '')
+UEBA_ENABLED = os.getenv('UEBA_ENABLED', 'True').lower() in ('true', '1', 'yes')
+ENABLE_THREAT_MODELING = os.getenv('ENABLE_THREAT_MODELING', 'True').lower() in ('true', '1', 'yes')
+DISASTER_RECOVERY_REGIONS = [region.strip() for region in os.getenv('DISASTER_RECOVERY_REGIONS', 'us-east-1,us-west-2,eu-west-1').split(',') if region.strip()]
+COMPLIANCE_FRAMEWORKS = [framework.strip().upper() for framework in os.getenv('COMPLIANCE_FRAMEWORKS', 'HIPAA,GDPR,ISO27001,SOC2').split(',') if framework.strip()]
+AUDIT_CHAIN_FILE_PATH = os.getenv('AUDIT_CHAIN_FILE_PATH', str(BASE_DIR / 'audit_chain.json'))
+ANTIVIRUS_ENABLED = os.getenv('ANTIVIRUS_ENABLED', 'False').lower() in ('true', '1', 'yes')
 
 # Production security settings
 SESSION_COOKIE_SECURE = (not DEBUG) and os.getenv('DJANGO_SESSION_COOKIE_SECURE', 'True').lower() in ('true', '1', 'yes')
@@ -204,7 +285,50 @@ LOGOUT_REDIRECT_URL = 'landing'
 from django.contrib.messages import constants as messages
 MESSAGE_LEVEL = messages.INFO
 
+PASSWORD_RESET_TIMEOUT = 86400
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '60/minute',
+        'anon': '10/minute',
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=12),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'ALGORITHM': JWT_ALGORITHM,
+    'SIGNING_KEY': SIMPLE_JWT_SIGNING_KEY,
+    'VERIFYING_KEY': SIMPLE_JWT_VERIFYING_KEY,
+    'AUDIENCE': 'medcloud',
+    'ISSUER': 'medcloud',
+    'JWK_URL': None,
+    'LEEWAY': 0,
+    'TOKEN_USER_CLASS': 'django.contrib.auth.models.User',
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'TOKEN_OBTAIN_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
+    'TOKEN_REFRESH_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenRefreshSerializer',
+}
 
 LOGGING = {
     'version': 1,
@@ -218,6 +342,17 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
+        },
+        'siem': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'siem': {
+            'handlers': ['siem'],
+            'level': os.getenv('SIEM_LOG_LEVEL', 'INFO'),
+            'propagate': False,
         },
     },
     'root': {

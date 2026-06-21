@@ -1,9 +1,13 @@
+import os
+import re
 import tempfile
 import uuid
 from pathlib import Path
 
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.core.files import File
+from django.db import transaction
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -22,6 +26,22 @@ from .utils import log_audit, get_report_for_user, get_accessible_reports
 import hash_service
 from services.encryption_service import decrypt_file, encrypt_file
 from blockchain.blockchain_service import add_report_hash, get_chain_summary, get_report_history, verify_report_hash
+
+
+def _sanitize_filename(filename: str) -> str:
+    safe_name = os.path.basename(filename)
+    safe_name = re.sub(r'[^A-Za-z0-9_.-]', '_', safe_name)
+    return safe_name or 'report'
+
+
+def _get_safe_media_path(path_candidate: Path) -> Path:
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    if not path_candidate.is_absolute():
+        path_candidate = media_root / path_candidate
+    resolved_path = path_candidate.resolve()
+    if not resolved_path.is_relative_to(media_root):
+        raise ValueError('Invalid media storage path')
+    return resolved_path
 
 
 class LandingPageView(TemplateView):
@@ -94,9 +114,10 @@ class UploadView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         uploaded_file = form.cleaned_data['encrypted_file']
-        original_name = uploaded_file.name
+        original_name = _sanitize_filename(uploaded_file.name)
 
         # write the uploaded plaintext to a temp file for hashing and encryption
+        temp_path = None
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         try:
             temp_file.write(uploaded_file.read())
@@ -110,8 +131,9 @@ class UploadView(LoginRequiredMixin, FormView):
         category = form.cleaned_data['category']
 
         # encrypt the plaintext temp file and store encrypted version
-        encrypted_path = Path(settings.MEDIA_ROOT) / 'reports' / 'encrypted' / f'{uuid.uuid4().hex}_{original_name}'
-        encryption_meta = encrypt_file(temp_path, encrypted_path, settings.FILE_ENCRYPTION_SECRET)
+        encrypted_filename = f'{uuid.uuid4().hex}_{original_name}'
+        encrypted_path = _get_safe_media_path(Path('reports') / 'encrypted' / encrypted_filename)
+        encryption_meta = encrypt_file(temp_path, encrypted_path)
         temp_path.unlink(missing_ok=True)
 
         encrypted_hash = hash_service.file_sha256(encrypted_path)
@@ -126,34 +148,68 @@ class UploadView(LoginRequiredMixin, FormView):
             verification_status='pending',
             encryption_metadata=encryption_meta,
         )
-        report.encrypted_file.name = str(encrypted_path.relative_to(settings.MEDIA_ROOT)).replace('\\', '/')
-        report.save()
+        report.encrypted_file.name = str(encrypted_path.relative_to(Path(settings.MEDIA_ROOT).resolve())).replace('\\', '/')
 
-        blockchain_record_data = add_report_hash(encrypted_hash, report.id, self.request.user.id)
-        bc = BlockchainRecord.objects.create(
-            report=report,
-            report_hash=encrypted_hash,
-            transaction_reference=blockchain_record_data['txid'],
-            block_timestamp=timezone.make_aware(timezone.datetime.fromtimestamp(blockchain_record_data['timestamp'])),
-            verification_status='pending',
-        )
+        blockchain_record_data = None
+        try:
+            with transaction.atomic():
+                report.save()
+                blockchain_record_data = add_report_hash(encrypted_hash, report.id, self.request.user.id)
+                bc = BlockchainRecord.objects.create(
+                    report=report,
+                    report_hash=encrypted_hash,
+                    transaction_reference=blockchain_record_data['txid'],
+                    block_timestamp=timezone.make_aware(timezone.datetime.fromtimestamp(blockchain_record_data['timestamp'])),
+                    verification_status='pending',
+                )
 
-        verification = verify_report_integrity(report)
-        if verification['local_match']:
-            report.verification_status = 'verified'
-            bc.verification_status = 'verified'
-            messages.success(self.request, 'Report uploaded, encrypted, and verified successfully.')
-        else:
-            report.verification_status = 'tampered'
-            bc.verification_status = 'tampered'
-            messages.warning(self.request, 'Report uploaded, but integrity verification failed.')
+                verification = verify_report_integrity(report)
+                if verification.get('local_match') and verification.get('blockchain_match') and verification.get('chain_valid'):
+                    report.verification_status = 'verified'
+                    bc.verification_status = 'verified'
+                    messages.success(self.request, 'Report uploaded, encrypted, and verified successfully.')
+                else:
+                    report.verification_status = 'tampered'
+                    bc.verification_status = 'tampered'
+                    if verification.get('chain_valid') is False:
+                        messages.error(self.request, 'Report upload blocked because blockchain ledger integrity failed. Upload aborted.')
+                        raise RuntimeError('Blockchain ledger integrity failed during upload.')
+                    elif verification.get('blockchain_match') is False:
+                        messages.warning(self.request, 'Report uploaded, but blockchain audit record does not match the stored report hash.')
+                    else:
+                        messages.warning(self.request, 'Report uploaded, but integrity verification failed.')
 
-        report.blockchain_txid = blockchain_record_data['txid']
-        report.block_number = blockchain_record_data['block_number']
-        report.save()
-        bc.save()
-        log_audit(self.request.user, 'upload', request=self.request, report=report, details='Report uploaded and processed')
-        return super().form_valid(form)
+                report.blockchain_txid = blockchain_record_data['txid']
+                report.block_number = blockchain_record_data['block_number']
+                report.save()
+                bc.save()
+                log_audit(self.request.user, 'upload', request=self.request, report=report, details='Report uploaded and processed')
+                return super().form_valid(form)
+        except RuntimeError as exc:
+            report_id = getattr(report, 'id', None)
+            if report_id:
+                MedicalReport.objects.filter(id=report_id).delete()
+            if encrypted_path.exists():
+                try:
+                    encrypted_path.unlink()
+                except Exception:
+                    pass
+            if temp_path and temp_path.exists():
+                temp_path.unlink(missing_ok=True)
+            messages.error(self.request, str(exc))
+            return self.form_invalid(form)
+        except Exception:
+            report_id = getattr(report, 'id', None)
+            if report_id:
+                MedicalReport.objects.filter(id=report_id).delete()
+            if encrypted_path.exists():
+                try:
+                    encrypted_path.unlink()
+                except Exception:
+                    pass
+            if temp_path and temp_path.exists():
+                temp_path.unlink(missing_ok=True)
+            raise
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -205,7 +261,8 @@ class ReportVerificationView(LoginRequiredMixin, View):
         verification = verify_report_integrity(report)
         bc = verification.get('blockchain_record')
 
-        if verification.get('local_match'):
+        chain_valid = verification.get('chain_valid') is not False
+        if verification.get('local_match') and verification.get('blockchain_match') and chain_valid:
             report.verification_status = 'verified'
             if bc:
                 bc.verification_status = 'verified'
@@ -216,10 +273,12 @@ class ReportVerificationView(LoginRequiredMixin, View):
             if bc:
                 bc.verification_status = 'tampered'
                 bc.save()
-            messages.warning(request, 'Report integrity verification failed. Review blockchain audit and report contents.')
-
-        if verification.get('chain_valid') is False:
-            messages.warning(request, 'Blockchain ledger integrity check failed; investigate potential ledger tampering.')
+            if verification.get('chain_valid') is False:
+                messages.warning(request, 'Report verification failed because the blockchain ledger integrity is invalid.')
+            elif verification.get('blockchain_match') is False:
+                messages.warning(request, 'Report verification failed because the blockchain audit record did not match the report hash.')
+            else:
+                messages.warning(request, 'Report integrity verification failed. Review blockchain audit and report contents.')
 
         report.save()
         log_audit(request.user, 'verify', request=request, report=report, details='Report integrity rechecked')
@@ -245,6 +304,11 @@ class BlockchainStatusView(LoginRequiredMixin, TemplateView):
 class ReportDeleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         report = get_report_for_user(request.user, pk)
+        try:
+            _get_safe_media_path(Path(report.encrypted_file.name))
+        except ValueError:
+            raise Http404('Encrypted report not found')
+
         report.encrypted_file.delete(save=False)
         report.delete()
         log_audit(request.user, 'delete', request=request, report=report, details='Report deleted')
@@ -255,12 +319,15 @@ class ReportDeleteView(LoginRequiredMixin, View):
 class ReportDownloadView(LoginRequiredMixin, View):
     def get(self, request, pk):
         report = get_report_for_user(request.user, pk)
-        file_path = Path(report.encrypted_file.path)
+        try:
+            file_path = _get_safe_media_path(Path(report.encrypted_file.name))
+        except ValueError:
+            raise Http404('Encrypted report not found')
         if not file_path.exists():
             raise Http404('Encrypted report not found')
 
         file_handle = file_path.open('rb')
-        response = FileResponse(file_handle, as_attachment=True, filename=report.original_filename)
+        response = FileResponse(file_handle, as_attachment=True, filename=_sanitize_filename(report.original_filename))
 
         original_close = response.close
         def close_and_cleanup():
@@ -281,7 +348,10 @@ class ReportDownloadView(LoginRequiredMixin, View):
 class SecureReportDownloadView(LoginRequiredMixin, View):
     def get(self, request, pk):
         report = get_report_for_user(request.user, pk)
-        encrypted_path = Path(report.encrypted_file.path)
+        try:
+            encrypted_path = _get_safe_media_path(Path(report.encrypted_file.name))
+        except ValueError:
+            raise Http404('Encrypted report not found')
         if not encrypted_path.exists():
             raise Http404('Encrypted report not found')
 
@@ -289,10 +359,10 @@ class SecureReportDownloadView(LoginRequiredMixin, View):
         try:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_path = Path(temp_file.name)
-                decrypt_file(encrypted_path, settings.FILE_ENCRYPTION_SECRET, report.encryption_metadata or {}, temp_path)
+                decrypt_file(encrypted_path, metadata=report.encryption_metadata or {}, output_path=temp_path)
 
             file_handle = temp_path.open('rb')
-            response = FileResponse(file_handle, as_attachment=True, filename=report.original_filename)
+            response = FileResponse(file_handle, as_attachment=True, filename=_sanitize_filename(report.original_filename))
 
             original_close = response.close
             def close_and_cleanup():
